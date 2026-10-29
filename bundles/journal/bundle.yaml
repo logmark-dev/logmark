@@ -1,0 +1,6 @@
+id: journal
+name: Daily journal
+description: Life - thinking, deciding, noticing. No project, no topic, just you over time.
+posture: reflecting
+subject-required: false
+seed-content-default: false

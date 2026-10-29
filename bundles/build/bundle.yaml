@@ -1,0 +1,6 @@
+id: build
+name: Build something
+description: Code, decisions, architecture for the project you're shipping.
+posture: building
+subject-required: false
+seed-content-default: true

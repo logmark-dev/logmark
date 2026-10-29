@@ -1,0 +1,13 @@
+{
+  "tracker": "follower of a topic over time, accumulating signals and threads to revisit",
+  "research": "inquirer chasing a question through sources, ideas, and gaps to fill",
+  "build": "builder shipping a project -- code, decisions, architecture, problems being solved",
+  "code-context": "curator maintaining persistent context for AI coding assistants across sessions",
+  "operator": "operator running a business or project -- clients, decisions, deliverables",
+  "journal": "person reflecting on life -- thinking, deciding, noticing over time",
+  "source": "curator feeding sources into a vault for agent-driven organization and concept extraction",
+  "beauty": "beauty and skincare creator tracking products, routines, and collaborations",
+  "travel": "traveler documenting trips, itineraries, and destination insights",
+  "food": "food enthusiast tracking recipes, restaurants, and culinary experiments",
+  "_default": "knowledge worker tracking projects and ideas"
+}

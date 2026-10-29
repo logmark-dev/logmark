@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "kind": "plaintext",
+      "text": "2026-05-07 12:34 INFO  starting capture\n2026-05-07 12:34 DEBUG route: +trading-diary\n2026-05-07 12:35 INFO  saved entry\n  -> vault: trading-diary.md\n  -> id: 3a9f21c"
+    }
+  ]
+}

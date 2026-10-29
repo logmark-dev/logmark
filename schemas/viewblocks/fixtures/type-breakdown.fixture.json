@@ -1,0 +1,67 @@
+{
+  "valid": [
+    {
+      "name": "mixed-types",
+      "envelope": {
+        "type": "type-breakdown",
+        "version": 1,
+        "data": {
+          "types": [
+            { "type": "log", "count": 24 },
+            { "type": "task", "count": 11 },
+            { "type": "idea", "count": 7 },
+            { "type": "decision", "count": 3 },
+            { "type": "block", "count": 1 }
+          ]
+        },
+        "meta": {
+          "source": "digest",
+          "period": { "start": "2026-03-24", "end": "2026-03-30" },
+          "generatedAt": "2026-03-30T18:00:00Z",
+          "inference": null,
+          "renderHints": { "weight": "half", "density": "standard" }
+        }
+      },
+      "assertions": {
+        "dominantType": "log",
+        "typeCount": 5
+      }
+    },
+    {
+      "name": "single-type",
+      "envelope": {
+        "type": "type-breakdown",
+        "version": 1,
+        "data": {
+          "types": [
+            { "type": "log", "count": 3 }
+          ]
+        },
+        "meta": {
+          "source": "digest",
+          "generatedAt": "2026-03-30T18:00:00Z",
+          "inference": null
+        }
+      },
+      "assertions": {
+        "dominantType": "log",
+        "typeCount": 1
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "missing-type-name",
+      "expectedError": "type",
+      "envelope": {
+        "type": "type-breakdown",
+        "version": 1,
+        "data": {
+          "types": [
+            { "count": 5 }
+          ]
+        }
+      }
+    }
+  ]
+}

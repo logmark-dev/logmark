@@ -1,0 +1,276 @@
+{
+  "vault": "valid-full",
+  "entryFiles": [
+    {
+      "path": "logmark/_inbox/_analogies/2026.md",
+      "route": null,
+      "typeName": "analogies",
+      "entries": [
+        {
+          "type": "Analogy",
+          "timestamp": "2026-07-20T12:20:00",
+          "context": null,
+          "body": "analogy: the vault is like a lab notebook - append-only, dated, yours #knowledge",
+          "inlineRoutes": [],
+          "tags": [
+            "knowledge"
+          ],
+          "source": null,
+          "session": null,
+          "refs": [],
+          "shortId": "4d5e6f70",
+          "isCompleted": false,
+          "resolution": null,
+          "taskDeadline": null,
+          "postponedCount": null,
+          "extendedMetadata": {}
+        }
+      ]
+    },
+    {
+      "path": "logmark/_inbox/_blocks/2026.md",
+      "route": null,
+      "typeName": "blocks",
+      "entries": [
+        {
+          "type": "Block",
+          "timestamp": "2026-07-20T11:30:00",
+          "context": null,
+          "body": "block: rate limiter rejects burst writes from the importer #infra",
+          "inlineRoutes": [],
+          "tags": [
+            "infra"
+          ],
+          "source": null,
+          "session": null,
+          "refs": [],
+          "shortId": "1a2b3c4d",
+          "isCompleted": false,
+          "resolution": "raised the token bucket ceiling to 200 per second",
+          "taskDeadline": null,
+          "postponedCount": null,
+          "extendedMetadata": {}
+        }
+      ]
+    },
+    {
+      "path": "logmark/_inbox/_diary/2026.md",
+      "route": null,
+      "typeName": "diary",
+      "entries": [
+        {
+          "type": "Log",
+          "timestamp": "2026-07-20T08:00:00",
+          "context": null,
+          "body": "Reviewed the overnight digest. Nothing on fire.",
+          "inlineRoutes": [],
+          "tags": [],
+          "source": null,
+          "session": null,
+          "refs": [],
+          "shortId": null,
+          "isCompleted": false,
+          "resolution": null,
+          "taskDeadline": null,
+          "postponedCount": null,
+          "extendedMetadata": {}
+        },
+        {
+          "type": "Log",
+          "timestamp": "2026-07-20T18:30:00",
+          "context": "terminal",
+          "body": "Wrapped for the day. Two entries in one file show minute-precision grouping. #wrap",
+          "inlineRoutes": [],
+          "tags": [
+            "wrap"
+          ],
+          "source": null,
+          "session": null,
+          "refs": [],
+          "shortId": null,
+          "isCompleted": false,
+          "resolution": null,
+          "taskDeadline": null,
+          "postponedCount": null,
+          "extendedMetadata": {}
+        }
+      ]
+    },
+    {
+      "path": "logmark/_inbox/_gaps/2026.md",
+      "route": null,
+      "typeName": "gaps",
+      "entries": [
+        {
+          "type": "Gap",
+          "timestamp": "2026-07-20T12:10:00",
+          "context": null,
+          "body": "gap: no benchmark for the reconciler on a 10k-entry vault #perf",
+          "inlineRoutes": [],
+          "tags": [
+            "perf"
+          ],
+          "source": null,
+          "session": null,
+          "refs": [],
+          "shortId": "3c4d5e6f",
+          "isCompleted": false,
+          "resolution": null,
+          "taskDeadline": null,
+          "postponedCount": null,
+          "extendedMetadata": {}
+        }
+      ]
+    },
+    {
+      "path": "logmark/_inbox/_questions/2026.md",
+      "route": null,
+      "typeName": "questions",
+      "entries": [
+        {
+          "type": "Question",
+          "timestamp": "2026-07-20T12:00:00",
+          "context": null,
+          "body": "question: does leaf-tag reconciliation confuse newcomers? #dx #surface/mcp",
+          "inlineRoutes": [],
+          "tags": [
+            "dx",
+            "mcp"
+          ],
+          "source": null,
+          "session": null,
+          "refs": [],
+          "shortId": "2b3c4d5e",
+          "isCompleted": false,
+          "resolution": null,
+          "taskDeadline": null,
+          "postponedCount": null,
+          "extendedMetadata": {}
+        }
+      ]
+    },
+    {
+      "path": "logmark/projects/refinery/_decisions/2026.md",
+      "route": "projects/refinery",
+      "typeName": "decisions",
+      "entries": [
+        {
+          "type": "Decision",
+          "timestamp": "2026-07-19T16:45:00",
+          "context": null,
+          "body": "decision: store vectors in sqlite, not a bespoke binary format +refinery #frozen #arch",
+          "inlineRoutes": [
+            "refinery"
+          ],
+          "tags": [
+            "frozen",
+            "arch"
+          ],
+          "source": null,
+          "session": null,
+          "refs": [],
+          "shortId": "9f8e7d6c",
+          "isCompleted": false,
+          "resolution": null,
+          "taskDeadline": null,
+          "postponedCount": null,
+          "extendedMetadata": {}
+        }
+      ]
+    },
+    {
+      "path": "logmark/projects/refinery/_ideas/2026.md",
+      "route": "projects/refinery",
+      "typeName": "ideas",
+      "entries": [
+        {
+          "type": "Idea",
+          "timestamp": "2026-07-20T10:02:00",
+          "context": null,
+          "body": "idea: cache hashtag scores with a popularity-weighted TTL +refinery #ml #perf",
+          "inlineRoutes": [
+            "refinery"
+          ],
+          "tags": [
+            "ml",
+            "perf"
+          ],
+          "source": null,
+          "session": null,
+          "refs": [],
+          "shortId": "c4d5e6f7",
+          "isCompleted": false,
+          "resolution": null,
+          "taskDeadline": null,
+          "postponedCount": null,
+          "extendedMetadata": {}
+        }
+      ]
+    },
+    {
+      "path": "logmark/projects/refinery/_tasks/2026.md",
+      "route": "projects/refinery",
+      "typeName": "tasks",
+      "entries": [
+        {
+          "type": "Task",
+          "timestamp": "2026-07-20T09:15:00",
+          "context": "vscode",
+          "body": "task: ship the hashtag clustering pass +refinery #ml by friday",
+          "inlineRoutes": [
+            "refinery"
+          ],
+          "tags": [
+            "ml"
+          ],
+          "source": "agent:claude-code",
+          "session": "2026-07-20-a1b2c3",
+          "refs": [
+            "decision:9f8e7d6c"
+          ],
+          "shortId": "b123bbe1",
+          "isCompleted": false,
+          "resolution": null,
+          "taskDeadline": "2026-07-25T17:00:00",
+          "postponedCount": 1,
+          "extendedMetadata": {}
+        }
+      ]
+    }
+  ],
+  "constitution": {
+    "vaultName": "Refinery Vault",
+    "purpose": "The shared memory for the knowledge refinery project and its agents.",
+    "hasConventions": true,
+    "hasScope": true,
+    "scopeIncludedRoutes": [
+      "refinery"
+    ],
+    "scopeExcludedRoutes": [],
+    "scopeIncludedTags": [
+      "ml"
+    ],
+    "scopeExcludedTags": [
+      "secret"
+    ]
+  },
+  "routes": [
+    {
+      "name": "refinery",
+      "section": "Projects",
+      "path": "projects/refinery",
+      "status": "active",
+      "tags": [
+        "ml",
+        "knowledge"
+      ]
+    },
+    {
+      "name": "travel",
+      "section": "Domains",
+      "path": "domains/travel",
+      "status": null,
+      "tags": []
+    }
+  ]
+}

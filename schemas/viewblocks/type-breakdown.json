@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logmark.dev/schemas/viewblocks/type-breakdown.json",
+  "title": "Type Breakdown Block Data",
+  "description": "Entry count breakdown by entry type",
+  "type": "object",
+  "required": ["types"],
+  "additionalProperties": false,
+  "properties": {
+    "types": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "count"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Entry type name (e.g. task, idea, log)"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of entries of this type"
+          }
+        }
+      }
+    }
+  }
+}

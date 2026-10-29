@@ -1,0 +1,76 @@
+{
+  "vault": "invalid-notation",
+  "entryFiles": [
+    {
+      "path": "logmark/_inbox/_blocks/2026.md",
+      "route": null,
+      "typeName": "blocks",
+      "entries": []
+    },
+    {
+      "path": "logmark/_inbox/_diary/2026.md",
+      "route": null,
+      "typeName": "diary",
+      "entries": [
+        {
+          "type": "Log",
+          "timestamp": "2026-07-20T09:00:00",
+          "context": null,
+          "body": "This valid entry survives. taskfoo: is not a known prefix, so this stays a log. #ok",
+          "inlineRoutes": [],
+          "tags": [
+            "ok"
+          ],
+          "source": null,
+          "session": null,
+          "refs": [],
+          "shortId": null,
+          "isCompleted": false,
+          "resolution": null,
+          "taskDeadline": null,
+          "postponedCount": null,
+          "extendedMetadata": {}
+        }
+      ]
+    },
+    {
+      "path": "logmark/_inbox/_ideas/2026.md",
+      "route": null,
+      "typeName": "ideas",
+      "entries": [
+        {
+          "type": "Idea",
+          "timestamp": "2026-07-20T10:00:00",
+          "context": null,
+          "body": "idea: +5 is math not a route, c++ stays literal, #2 is not a tag but #v2fix is +real-route",
+          "inlineRoutes": [
+            "real-route"
+          ],
+          "tags": [
+            "v2fix"
+          ],
+          "source": null,
+          "session": null,
+          "refs": [],
+          "shortId": "aa11bb22",
+          "isCompleted": false,
+          "resolution": null,
+          "taskDeadline": null,
+          "postponedCount": null,
+          "extendedMetadata": {}
+        }
+      ]
+    }
+  ],
+  "constitution": {
+    "vaultName": "Notation Edge Cases",
+    "purpose": "A vault exercising malformed notation and parser leniency.",
+    "hasConventions": false,
+    "hasScope": false,
+    "scopeIncludedRoutes": [],
+    "scopeExcludedRoutes": [],
+    "scopeIncludedTags": [],
+    "scopeExcludedTags": []
+  },
+  "routes": []
+}

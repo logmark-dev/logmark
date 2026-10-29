@@ -1,0 +1,6 @@
+id: research
+name: Research notes
+description: Chase a question - sources, ideas you're connecting, gaps to fill.
+posture: learning
+subject-required: false
+seed-content-default: true

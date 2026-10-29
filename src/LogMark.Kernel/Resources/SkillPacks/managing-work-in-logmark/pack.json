@@ -1,0 +1,7 @@
+{
+  "slug": "managing-work-in-logmark",
+  "displayName": "Managing Work in LogMark",
+  "description": "Operate a LogMark vault as external memory for project work: orient at the start of a session, capture typed entries, record decisions and blockers, groom the idea backlog, hand off at session end, and bootstrap a new vault from a project.",
+  "version": 3,
+  "recommendsHooks": true
+}

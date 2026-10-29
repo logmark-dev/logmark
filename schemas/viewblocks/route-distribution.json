@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logmark.dev/schemas/viewblocks/route-distribution.json",
+  "title": "Route Distribution Block Data",
+  "description": "Entry distribution across routes (+projects)",
+  "type": "object",
+  "required": [
+    "routes",
+    "total"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "count",
+          "pct"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Route name (without + prefix)"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of entries routed here"
+          },
+          "pct": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Percentage of total entries (0-100)"
+          },
+          "dominantType": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Most-frequent entry type among the route's entries (camelCase, e.g. task, idea); consumers may tint the bar by it"
+          }
+        }
+      }
+    },
+    "total": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total entry count across all routes"
+    }
+  }
+}

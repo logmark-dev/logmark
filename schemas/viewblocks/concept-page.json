@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logmark.dev/schemas/viewblocks/concept-page.json",
+  "title": "Concept Page Block Data",
+  "description": "A concept page distilled from vault entries, rendered by the LogMark.Knowledge cockpit",
+  "type": "object",
+  "required": ["slug", "title", "status", "tags", "body", "sourceCount", "relatedConcepts"],
+  "additionalProperties": false,
+  "properties": {
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable identifier of the concept page"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display title of the concept"
+    },
+    "status": {
+      "enum": ["draft", "mature", "archived"],
+      "description": "Lifecycle status of the concept page"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Cross-cutting tags associated with the concept"
+    },
+    "body": {
+      "type": "string",
+      "description": "Markdown source of the page body"
+    },
+    "sourceCount": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of vault entries this page was distilled from"
+    },
+    "relatedConcepts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Slugs of other concept pages this one relates to"
+    }
+  }
+}

@@ -1,0 +1,2845 @@
+/* ============================================================
+   Component layer. Color/type/entry tokens come from tokens.css
+   (vendored cross-surface contract - chrome / workspace / card /
+   card-elevated / popup + text roles + entry palette). The block
+   below is an ALIAS layer only: it maps this file's legacy
+   paper/ink/rule vocabulary onto the contract so both themes are
+   owned entirely by tokens.css (:root[data-theme]). No color
+   literals belong in this file.
+   ============================================================ */
+:root {
+  --paper: var(--workspace);
+  --paper-2: var(--card);
+  --paper-3: var(--card-elevated);
+  --ink: var(--text-primary);
+  --ink-2: var(--text-secondary);
+  --ink-3: var(--text-muted);
+  --ink-4: var(--text-dim);
+  --rule: var(--border);
+  --rule-2: var(--border-subtle);
+  /* --accent comes straight from tokens.css (warm amber - the old
+     cold-blue local accent is retired per the design pass). */
+  --accent-bg: var(--accent-tinted-bg);
+  --warn: var(--signal-alert);
+  --warn-bg: color-mix(in srgb, var(--signal-alert) 14%, transparent);
+  --fresh: var(--signal-positive);
+  /* Display face: serif only when the theme defines --font-display
+     (light PAPER theme); dark falls through to sans - kills the
+     dark-theme italic-serif voice per the design pass. */
+  --serif: var(--font-display, var(--font-sans));
+  --mono: var(--font-mono);
+  --sans: var(--font-sans);
+  --d-pad: 28px;
+  --d-body: 18px;
+  --d-lh: 1.65;
+  --d-h1: 34px;
+  --d-h2: 22px;
+  /* Pass-4 activity-first head (frame R/S, D3/D9): root + route landing
+     share a smaller, non-serif h1 and a lede line - neither matches an
+     existing --fs-* body-scale step, so they get their own local tokens
+     (polish rule #1: hero/display text earns its own scale). */
+  --d-h1-compact: 28px;
+  --d-lede: 15px;
+  /* timetrack is a cockpit-local alias; canonical palette lives in
+     tokens.css (--entry-log .. --entry-analogy, --entry-diary). */
+  --entry-timetrack: var(--entry-log);
+
+  /* ---- lblocks token bridge ----
+     lblocks primitives consume --lb-* custom properties. The engine's
+     theme.ts maps them via rgb(var(--token)) for RGB-triple hosts (the
+     WPF container); this cockpit's contract tokens are hex, so we bridge
+     directly. Theme-neutral: the underlying tokens flip with
+     :root[data-theme]. */
+  --lb-font-family: var(--font-sans);
+  --lb-font-mono: var(--font-mono);
+  --lb-font-size-header: var(--fs-h1);
+  --lb-font-size-body: var(--fs-body);
+  --lb-font-size-lead: var(--fs-body);
+  --lb-font-size-meta: var(--fs-meta);
+  --lb-font-size-label: var(--fs-hint);
+  --lb-font-size-small: var(--fs-hint);
+  --lb-radius: var(--radius-md);
+  --lb-radius-sm: var(--radius-sm);
+  --lb-radius-full: var(--radius-full);
+  --lb-bg-primary: var(--workspace);
+  --lb-bg-secondary: var(--card);
+  --lb-bg-tertiary: var(--card-elevated);
+  --lb-bg-hover: var(--card-elevated);
+  --lb-surface: var(--card);
+  --lb-border: var(--border);
+  --lb-border-subtle: var(--border-subtle);
+  --lb-text-primary: var(--text-primary);
+  --lb-text-secondary: var(--text-secondary);
+  --lb-text-muted: var(--text-muted);
+  --lb-text-dim: var(--text-dim);
+  --lb-text-on-accent: var(--text-on-accent);
+  --lb-accent: var(--accent);
+  --lb-accent-thread: var(--accent);
+  --lb-signal-positive: var(--signal-positive);
+  --lb-signal-alert: var(--signal-alert);
+  --lb-signal-negative: var(--signal-negative);
+  --lb-signal-inquiry: var(--signal-inquiry);
+  --lb-signal-focus: var(--signal-focus);
+  --lb-code-bg: var(--card);
+  --lb-quote-border: var(--text-muted);
+  --lb-entry-log: var(--entry-log);
+  --lb-entry-task: var(--entry-task);
+  --lb-entry-idea: var(--entry-idea);
+  --lb-entry-block: var(--entry-block);
+  --lb-entry-decision: var(--entry-decision);
+  --lb-entry-question: var(--entry-question);
+  --lb-entry-gap: var(--entry-gap);
+  --lb-entry-analogy: var(--entry-analogy);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.45;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+}
+
+/* Shell anatomy (design pass Q1): three chrome zones - top bar, sidebar,
+   status bar - all on --chrome so the light theme flips them together;
+   main content on --workspace. */
+.shell {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.shell-body {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  min-height: 0;
+}
+
+.sidebar {
+  border-right: 1px solid var(--rule-2);
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  background: var(--chrome);
+  overflow-y: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.brand-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 20%, transparent);
+}
+
+.brand-name {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.brand-suffix {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+.search-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--paper-2);
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.kbd {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 5px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  color: var(--ink-3);
+  background: var(--paper);
+}
+
+.nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Host-gated sections (lmk-hqgm: Recent concepts without a concept producer). */
+.nav-section[hidden] {
+  display: none;
+}
+
+.nav-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  color: var(--ink-4);
+  margin-bottom: 5px;
+}
+
+.nav-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  border-radius: 4px;
+  border-left: 2px solid transparent;
+  color: var(--ink-2);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.nav-item-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.nav-item:hover {
+  background: var(--paper-3);
+  color: var(--ink);
+}
+
+.nav-item.active {
+  background: var(--accent-tinted-bg);
+  border-left-color: var(--accent);
+  color: var(--ink);
+}
+
+.nav-item .count {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.nav-item .count.warn {
+  color: var(--warn);
+}
+
+/* Routes group label with the vault tree's `collapse all` action
+   (frame Q, D2). `.nav-label-action` inherits the label's font-size -
+   no new raw px value. */
+.nav-label-with-action {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nav-label-action {
+  font-family: var(--mono);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.nav-label-action:hover {
+  color: var(--ink);
+}
+
+/* Vault tree body (frame Q, D2) - the primitive (`lb-reader-sidebar-tree`
+   and descendants) carries its own layout/token styling inline; this
+   wrapper only sets the sidebar-local box behavior. */
+.route-tree {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  height: 44px;
+  border-bottom: 1px solid var(--rule-2);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--d-pad);
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  background: var(--chrome);
+}
+
+.nav-history {
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.nav-history:hover {
+  background: var(--paper-3);
+  color: var(--ink);
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.crumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.crumbs span:last-child {
+  color: var(--ink);
+}
+
+.crumb-sep {
+  color: var(--ink-4);
+}
+
+.topbar-spacer {
+  flex: 1;
+}
+
+.health-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent);
+  text-decoration: none;
+}
+
+.health-pill.ok {
+  background: color-mix(in srgb, var(--fresh) 12%, transparent);
+  color: var(--fresh);
+  border-color: color-mix(in srgb, var(--fresh) 30%, transparent);
+}
+
+/* Health lint unavailable (daemon-hosted 501): staleness is unknown, not
+   zero - a muted/neutral treatment, never the green ok state and never
+   the warn state. Alias tokens only; both themes flip via tokens.css. */
+.health-pill.na {
+  background: var(--paper-2);
+  color: var(--ink-3);
+  border-color: var(--rule);
+}
+
+.pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.theme-toggle {
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  color: var(--ink-2);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* Frame P topbar "n / N in <route>" counter + prev/next arrows. */
+.topbar-position {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topbar-position-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-3);
+  font-size: var(--fs-body);
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.topbar-position-btn:hover {
+  background: var(--paper-3);
+  color: var(--ink);
+}
+
+.topbar-position-btn[aria-disabled='true'] {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: default;
+}
+
+.topbar-position-label {
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--ink-3);
+  padding: 0 2px;
+  white-space: nowrap;
+}
+
+.main {
+  min-width: 0;
+  overflow-y: auto;
+  background: var(--workspace);
+}
+
+.content-slot {
+  min-width: 0;
+}
+
+.root-wrap,
+.page-wrap {
+  padding: var(--d-pad);
+  max-width: 1140px;
+}
+
+/* Status bar (frame W, D9/Q6): caps to `vault · live` - adapter and
+   capability flags moved off the always-on bar into the diagnostics
+   popover (`.ck-diag`), which opens on hover/click of the live dot.
+   Quiet by default, still honest on demand. */
+.statusbar {
+  height: 30px;
+  border-top: 1px solid var(--rule-2);
+  background: var(--chrome);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 var(--d-pad);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.status-left,
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.statusbar b {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+.status-sep {
+  color: var(--ink-4);
+}
+
+.status-diag-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.status-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-4);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.status-live.on {
+  color: var(--fresh);
+}
+
+.status-live[aria-expanded="true"] {
+  border-color: var(--rule);
+  background: var(--paper-2);
+}
+
+.status-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-4);
+}
+
+/* Diagnostics popover (frame W, D9/Q6): solid popup surface, opens above
+   and left-aligned to the live dot. Adapter name + the three capability
+   flags, truthful per adapter - the detail settings' own Capabilities
+   panel keeps permanently, this is the on-demand chrome twin. */
+.ck-diag {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  width: 200px;
+  background: var(--popup);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-popup);
+  padding: 12px 14px;
+  z-index: 20;
+}
+
+.ck-diag .dh {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.ck-diag .dr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--text-secondary);
+}
+
+.ck-diag .dr .dk {
+  width: 62px;
+  flex: none;
+  color: var(--text-muted);
+}
+
+.ck-diag .dot-on,
+.ck-diag .dot-off {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.ck-diag .dot-on {
+  background: var(--signal-positive);
+}
+
+.ck-diag .dot-off {
+  background: var(--text-dim);
+}
+
+.ck-diag .tail {
+  position: absolute;
+  bottom: -6px;
+  left: 18px;
+  width: 10px;
+  height: 10px;
+  background: var(--popup);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transform: rotate(45deg);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 56px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 36px;
+}
+
+.hero-eyebrow,
+.section-meta,
+.mono,
+.entry-eyebrow,
+.cp-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.hero-eyebrow,
+.cp-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.hero h1,
+.cp-title,
+.entry-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.hero h1 {
+  font-size: var(--d-h1);
+  line-height: 1.05;
+  margin: 0 0 18px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.hero p {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 56ch;
+}
+
+.stats-card,
+.frontmatter,
+.ledger-note {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 18px;
+  background: var(--paper-2);
+}
+
+.stat-row,
+.fm-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  padding: 5px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.stat-row:last-child,
+.fm-row:last-child {
+  border-bottom: 0;
+}
+
+.stat-row .k,
+.fm-row .k {
+  color: var(--ink-3);
+}
+
+.stat-row .v,
+.fm-row .v {
+  color: var(--ink);
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: baseline;
+  margin: 28px 0 14px;
+}
+
+.section-head h2,
+.synthesis h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--d-h2);
+  margin: 0;
+}
+
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.concept-card {
+  padding: 18px 20px;
+  background: var(--paper);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.concept-card:hover {
+  background: var(--paper-2);
+}
+
+.concept-card h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 21px;
+  margin: 0;
+  color: var(--ink);
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  padding: 2px 7px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+
+.concepts-index-page {
+  max-width: 1320px;
+}
+
+.constitution-influence-page {
+  max-width: 1280px;
+}
+
+.constitution-hero {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 22px;
+}
+
+.constitution-hero h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: calc(var(--d-h1) * 0.7);
+  line-height: 1.12;
+  letter-spacing: 0;
+  margin: 6px 0 8px;
+}
+
+.constitution-hero p,
+.constitution-panel p {
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.constitution-main {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.constitution-panel {
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+}
+
+.constitution-section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.constitution-section-head h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.constitution-section-head span {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.constitution-rule-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.constitution-rule-list li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--rule-2);
+  color: var(--ink-2);
+}
+
+.constitution-rule-list li::marker {
+  color: var(--ink-4);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.constitution-body {
+  font-family: var(--serif);
+  font-size: var(--d-body);
+  line-height: var(--d-lh);
+  color: var(--ink);
+}
+
+.constitution-editor {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: var(--d-small);
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.constitution-editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.constitution-empty-banner {
+  margin-bottom: 22px;
+}
+
+.concepts-index-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 32px;
+  align-items: end;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 18px;
+}
+
+/* Compact head (frame W, D9): "hero reserved for root" - concepts-list
+   is an inner view, so its h1 drops off the serif/tall-hero treatment
+   to the same compact scale route-landing uses (frame S). The
+   explanatory paragraph is removed, not relocated; the metrics strip
+   beside it carries the meta. */
+.concepts-index-hero h1 {
+  font-size: var(--fs-display);
+  font-weight: var(--fw-semibold);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 6px 0 0;
+}
+
+.concepts-index-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.concepts-index-metric {
+  background: var(--paper);
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.concepts-index-metric .k {
+  color: var(--ink-3);
+}
+
+.concepts-index-metric .v {
+  color: var(--ink);
+}
+
+.concepts-index-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.concepts-index-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.concepts-index-tab,
+.concepts-index-sort {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--paper);
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.concepts-index-tab {
+  padding: 4px 9px;
+  cursor: pointer;
+}
+
+.concepts-index-tab[aria-pressed="true"] {
+  color: var(--ink);
+  border-color: var(--ink-4);
+  background: var(--paper-2);
+}
+
+.concepts-index-sort {
+  padding: 4px 8px;
+}
+
+.concepts-index-sort:disabled {
+  color: var(--ink-4);
+}
+
+.concepts-index-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.concepts-index-tile {
+  min-width: 0;
+  padding: 14px 16px;
+  background: var(--paper);
+  color: var(--ink-2);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  overflow-wrap: anywhere;
+}
+
+.concepts-index-tile:hover {
+  background: var(--paper-2);
+}
+
+.concepts-index-tile-top,
+.concepts-index-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.concepts-index-tile-top {
+  justify-content: space-between;
+}
+
+.concepts-index-tile h2 {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.concepts-index-facts {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.concepts-index-tile .tag {
+  overflow-wrap: anywhere;
+}
+
+.empty-state {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 14px 0;
+}
+
+.concepts-index-empty {
+  grid-column: 1 / -1;
+  background: var(--paper);
+  padding: 18px;
+}
+
+.feed-item,
+.source,
+.backlink {
+  border-bottom: 1px solid var(--rule-2);
+  padding: 10px 0;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.feed-item {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: 16px;
+  align-items: baseline;
+}
+
+/* Health rows fold onto the shared viewer-entry-row primitive (frame T
+   / D7); this wrapper only carries the bordered-card container look. */
+.health-list {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 0 16px;
+}
+
+.concept-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 64px;
+  padding: var(--d-pad);
+  padding-top: 36px;
+  max-width: 1240px;
+}
+
+.entry-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 64px;
+  padding: var(--d-pad);
+  padding-top: 36px;
+  max-width: 1080px;
+}
+
+.cp-title {
+  font-size: var(--d-h1);
+  line-height: 1.1;
+  margin: 18px 0 24px;
+}
+
+.entry-title {
+  font-size: calc(var(--d-h1) * 0.78);
+  line-height: 1.22;
+  margin: 16px 0 28px;
+}
+
+/* Frame P header row: type pill + date (.entry-eyebrow, unchanged) plus
+   the "back to route" link, pushed to the far right. */
+.entry-detail-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.entry-back-link {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--ink-4);
+  text-decoration: none;
+  white-space: nowrap;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.entry-back-link:hover {
+  color: var(--ink-2);
+}
+
+.status-pill {
+  padding: 2px 7px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+
+.status-pill.draft {
+  color: var(--accent);
+  border-color: color-mix(in oklch, var(--accent) 35%, transparent);
+}
+
+/* Entry-type pill coloring (frame B header): the pill reads in the
+   entry's palette color via the shared .entry-type-* accent classes. */
+.status-pill[class*='entry-type-'] {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--entry-accent);
+  border-color: color-mix(in srgb, var(--entry-accent) 35%, transparent);
+  background: color-mix(in srgb, var(--entry-accent) 10%, transparent);
+}
+
+/* Chip row under the entry title (frame B): route chip + tag chips. */
+.entry-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 4px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  text-decoration: none;
+  background: var(--paper-2);
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.chip-route {
+  color: var(--accent-text);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: var(--accent-tinted-bg);
+}
+
+.synthesis,
+.entry-body {
+  font-family: var(--serif);
+  font-size: var(--d-body);
+  line-height: var(--d-lh);
+  color: var(--ink);
+}
+
+.synthesis p,
+.entry-body p {
+  margin: 0 0 16px;
+}
+
+.synthesis .lead {
+  font-size: calc(var(--d-body) * 1.15);
+  border-left: 2px solid var(--accent);
+  padding-left: 18px;
+}
+
+/* Frame P footer: prev/next-in-context preview cards. */
+.entry-context-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.entry-context-card {
+  display: block;
+  border: 1px solid var(--rule-2);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.entry-context-card:hover {
+  border-color: var(--accent);
+}
+
+.entry-context-card.empty {
+  border-color: transparent;
+}
+
+.entry-context-card.next {
+  text-align: right;
+}
+
+.entry-context-eyebrow {
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--ink-4);
+  margin-bottom: 5px;
+}
+
+.entry-context-title {
+  font-size: var(--fs-meta);
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cp-aside {
+  position: sticky;
+  top: 60px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  padding-bottom: 40px;
+}
+
+.gutter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gutter-head {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  color: var(--ink-4);
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.source {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 8px;
+}
+
+.source .fresh {
+  color: var(--fresh);
+}
+
+.source .changed,
+.source .deleted,
+.source .parse-error {
+  color: var(--warn);
+}
+
+.search-page {
+  max-width: 1280px;
+}
+
+.search-hero {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 22px;
+}
+
+/* Compact head (frame W, D9): search is an inner view - crumb + compact
+   head, not a tall hero. */
+.search-hero h1 {
+  font-size: var(--fs-display);
+  font-weight: var(--fw-semibold);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 6px 0 0;
+}
+
+.search-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.search-main,
+.search-controls,
+.search-input-label,
+.search-selector,
+.search-result-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-main {
+  gap: 18px;
+}
+
+/* Search field (pass-2 R3 / frame I): the query is the page's focus. */
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--paper-2);
+  box-shadow: var(--glow-focus);
+}
+
+.search-field-glyph {
+  color: var(--ink-3);
+}
+
+.search-field .search-box {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  outline: none;
+}
+
+.search-field-meta {
+  font-size: 11px;
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+.search-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 30px;
+}
+
+.search-strip .hero-eyebrow {
+  margin: 0;
+}
+
+.search-empty {
+  padding: 12px 0;
+  color: var(--ink-3);
+}
+
+.btn {
+  border: 0;
+  background: var(--accent);
+  color: white;
+  border-radius: 4px;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.search-box,
+input {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink);
+}
+
+.banner {
+  padding: 10px 12px;
+  border: 1px solid color-mix(in oklch, var(--warn) 30%, transparent);
+  background: var(--warn-bg);
+  border-radius: 4px;
+  color: var(--ink-2);
+  margin-bottom: 16px;
+}
+
+.concept-editor-page {
+  max-width: 1440px;
+}
+
+.concept-editor-header {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 22px;
+}
+
+.concept-editor-header h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: calc(var(--d-h1) * 0.72);
+  line-height: 1.12;
+  letter-spacing: 0;
+  margin: 6px 0 8px;
+}
+
+.concept-editor-header p {
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.concept-editor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 28px;
+  align-items: start;
+}
+
+.concept-editor-fields,
+.concept-editor-side,
+.concept-editor-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.concept-editor-fields {
+  gap: 12px;
+}
+
+.concept-editor-side {
+  gap: 18px;
+  position: sticky;
+  top: 64px;
+}
+
+.concept-editor-panel {
+  gap: 10px;
+  border-top: 1px solid var(--rule);
+  padding-top: 10px;
+}
+
+.concept-editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.concept-editor-field input,
+.concept-editor-field select,
+.concept-editor-field textarea {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink);
+  font: inherit;
+}
+
+.concept-editor-field textarea {
+  min-height: 420px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.concept-editor-preview {
+  min-height: 180px;
+  padding: 12px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--paper-2);
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.concept-editor-errors:empty,
+.concept-editor-save-status:empty {
+  display: none;
+}
+
+.concept-editor-error-list {
+  margin: 0;
+  padding: 8px 10px 8px 28px;
+  border: 1px solid color-mix(in oklch, var(--warn) 30%, transparent);
+  border-radius: 4px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  font-size: 12px;
+}
+
+.concept-editor-save {
+  width: 100%;
+}
+
+.concept-editor-save-status {
+  color: var(--ink-3);
+}
+
+.health-triage-page {
+  max-width: 1320px;
+}
+
+.health-triage-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  gap: 36px;
+  align-items: end;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 24px;
+}
+
+/* Compact head (frame W, D9): health is an inner view - crumb + compact
+   head. The old explanatory paragraph is removed; `.section-meta` carries
+   a one-line count instead. */
+.health-triage-hero h1 {
+  font-size: var(--fs-display);
+  font-weight: var(--fw-semibold);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 6px 0 0;
+}
+
+.health-triage-hero .section-meta {
+  margin: 8px 0 0;
+}
+
+.health-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.health-metric {
+  background: var(--paper);
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.health-metric .k,
+.health-detail-row .k {
+  color: var(--ink-3);
+}
+
+.health-metric .v,
+.health-detail-row .v {
+  color: var(--ink);
+}
+
+.health-triage-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 28px;
+  align-items: start;
+}
+
+.health-triage-queue {
+  border-top: 1px solid var(--rule);
+}
+
+.health-signal-row {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 14px;
+  width: 100%;
+  padding: 12px 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule-2);
+  background: transparent;
+  color: var(--ink-2);
+  text-align: left;
+  cursor: pointer;
+}
+
+.health-signal-row:hover,
+.health-signal-row.active {
+  color: var(--ink);
+}
+
+.health-signal-status {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--warn);
+  padding-top: 2px;
+}
+
+.health-signal-status.parse-error {
+  color: var(--accent);
+}
+
+.health-signal-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.health-signal-title {
+  color: var(--ink);
+}
+
+.health-signal-meta {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.health-signal-panel {
+  position: sticky;
+  top: 64px;
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+}
+
+.health-signal-detail h2,
+.health-empty h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.2;
+  margin: 8px 0 14px;
+}
+
+.health-detail-rows {
+  border-top: 1px solid var(--rule-2);
+}
+
+.health-detail-row {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--rule-2);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.health-detail-row .v {
+  overflow-wrap: anywhere;
+}
+
+.health-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.health-action-row .btn {
+  text-decoration: none;
+}
+
+.health-action-note,
+.health-empty p {
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.health-empty {
+  max-width: 620px;
+  padding-top: 22px;
+}
+
+.settings-page {
+  max-width: 1280px;
+}
+
+.settings-header {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 24px;
+}
+
+.settings-header h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: calc(var(--d-h1) * 0.72);
+  line-height: 1.12;
+  letter-spacing: 0;
+  margin: 6px 0 8px;
+}
+
+.settings-header p,
+.settings-note {
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.settings-status-grid,
+.settings-routing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.settings-panel {
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+  margin-bottom: 26px;
+}
+
+.settings-panel h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+}
+
+.settings-kv-list,
+.settings-provider-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-kv {
+  display: flex;
+  gap: 6px;
+}
+
+.settings-panel-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.settings-kv {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.settings-kv .k,
+.settings-provider-detail {
+  color: var(--ink-3);
+}
+
+.settings-kv .v {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.settings-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.settings-provider-row {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: baseline;
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-provider-name {
+  color: var(--ink);
+}
+
+.settings-provider-detail {
+  font-size: 12px;
+}
+
+.settings-provider-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: end;
+}
+
+.settings-routing-panel {
+  max-width: 860px;
+}
+
+.settings-routing-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* Route landing action row (pass-2 R4 / frame H). */
+.route-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+a.btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ---- Concepts first-run empty state (design pass frame E) ---- */
+
+.concepts-empty-wrap {
+  grid-column: 1 / -1;
+}
+
+.concepts-empty-card {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  background: var(--paper-2);
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.concepts-empty-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  color: var(--ink-3);
+  font-size: 18px;
+}
+
+.concepts-empty-card h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.concepts-empty-card p {
+  margin: 0;
+  max-width: 56ch;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+/* ---- Pass-3 shared patterns: stat strip, scaffold note, queue rows,
+   meta card, ghost/gated buttons (frames K/L/M) ---- */
+
+.stat-strip {
+  display: flex;
+  border: 1px solid var(--rule-2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  flex: none;
+}
+
+.stat-strip-cell {
+  padding: 12px 18px;
+  border-right: 1px solid var(--rule-2);
+  min-width: 92px;
+}
+
+.stat-strip-cell:last-child {
+  border-right: none;
+}
+
+.stat-strip-cell .k {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.stat-strip-cell .v {
+  font-family: var(--mono);
+  font-size: 18px;
+  color: var(--ink);
+  margin-top: 4px;
+}
+
+.scaffold-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+}
+
+/* Dark theme measured at 3.39:1 against --workspace (release review
+   polish sweep, lmk-r8q4 item 5) - one ink step up clears ~4:1 without
+   touching the light theme, which already sits comfortably above AA. */
+:root[data-theme="dark"] .scaffold-note {
+  color: var(--ink-2);
+}
+
+.queue-row {
+  --queue-accent: var(--ink-4);
+  display: grid;
+  grid-template-columns: 3px auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 8px 11px 0;
+  border-bottom: 1px solid var(--rule-2);
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  color: inherit;
+}
+
+.queue-row:hover {
+  background: color-mix(in srgb, var(--paper-2) 45%, transparent);
+}
+
+.queue-row.active {
+  background: color-mix(in srgb, var(--paper-3) 70%, transparent);
+}
+
+.queue-rim {
+  align-self: stretch;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--queue-accent);
+}
+
+.queue-title {
+  font-size: 13px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.queue-title.mono {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.queue-when {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-4);
+  justify-self: end;
+  white-space: nowrap;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--rule-2);
+}
+
+.btn.ghost:hover {
+  border-color: var(--rule);
+  color: var(--ink);
+}
+
+.btn.gated {
+  background: transparent;
+  color: var(--ink-4);
+  border: 1px dashed var(--border-strong);
+  cursor: default;
+}
+
+.btn.sm {
+  padding: 5px 11px;
+  font-size: 12px;
+}
+
+.gate-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--warn);
+}
+
+.meta-card {
+  border: 1px solid var(--rule-2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.meta-card-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.meta-card-row:last-child {
+  border-bottom: none;
+}
+
+.meta-card-row .mk {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  width: 74px;
+  flex: none;
+}
+
+.meta-card-row .mv {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  word-break: break-all;
+}
+
+/* Health signals (frame M) */
+.health-cli-line {
+  margin: 8px 0 0;
+  color: var(--ink-2);
+  font-size: var(--fs-body);
+}
+
+.health-cli-line code {
+  font-family: var(--mono);
+  color: var(--ink);
+}
+
+.health-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.health-signal-list {
+  margin-top: 6px;
+}
+
+/* ---- Root activity-first head + bands (design pass v4 frame R, D3/D8/D9):
+   at-a-glance statstrip + sparkline cell + type-pill row, then recent
+   activity / needs-review / concept-refinery bands. Shared with the route
+   landing head (frame S, Task 7) via shared/at-a-glance.ts. ---- */
+
+.glance-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 36px;
+  row-gap: 18px;
+  align-items: start;
+  padding-bottom: 26px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 26px;
+}
+
+.glance-copy {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.glance-copy h1 {
+  font-size: var(--d-h1-compact);
+  font-weight: var(--fw-semibold);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 12px 0 0;
+  color: var(--ink);
+}
+
+.glance-copy p {
+  font-size: var(--d-lede);
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 12px 0 0;
+}
+
+/* Route landing's h1 sits one step down from root's (frame S: 24px vs
+   root's 28px) - the compact head stays visibly smaller than the tall
+   hero it replaces (D9). */
+.glance-copy.route-head h1 {
+  font-size: var(--fs-display);
+}
+
+/* display:contents - the wrapper isn't a box, so its children (the
+   statstrip and the type-pill row) place independently in this grid. */
+.ck-glance {
+  display: contents;
+}
+
+.ck-statstrip {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  border: 1px solid var(--rule-2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  flex: none;
+}
+
+.ck-statstrip .cell {
+  padding: 12px 18px;
+  border-right: 1px solid var(--rule-2);
+  min-width: 88px;
+}
+
+.ck-statstrip .cell:last-child {
+  border-right: none;
+}
+
+.ck-statstrip .k {
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.ck-statstrip .v {
+  font-family: var(--mono);
+  font-size: var(--fs-h1);
+  color: var(--ink);
+  margin-top: 4px;
+}
+
+.ck-sparkcell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-left: 1px solid var(--rule-2);
+}
+
+.ck-spark {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 36px;
+}
+
+.ck-spark .bar {
+  width: 7px;
+  border-radius: 2px 2px 0 0;
+  background: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.ck-spark .bar.hi {
+  background: var(--accent);
+}
+
+.ck-typerow {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ck-typechip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 13px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--rule);
+  background: transparent;
+  font-family: var(--mono);
+  font-size: var(--fs-meta);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.ck-typechip .d {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lp-type-color);
+  flex: none;
+}
+
+.ck-typechip .n {
+  color: var(--ink);
+}
+
+.ck-typechip:hover {
+  border-color: var(--lp-type-color);
+  color: var(--ink);
+}
+
+/* Type filter-chip row (frame O, D3/D7): `all · N` + one chip per type
+   present, above the rail-driving entries list on route landing. Distinct
+   from `.ck-typechip` above - these filter the list in place instead of
+   navigating to a lens, so the active state (border+fill) carries the
+   affordance instead of a hover-only tell. */
+.ck-filterrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.ck-filterchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 13px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--rule);
+  background: transparent;
+  font-family: var(--mono);
+  font-size: var(--fs-meta);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.ck-filterchip .d {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lp-type-color);
+  flex: none;
+}
+
+.ck-filterchip:hover {
+  border-color: var(--lp-type-color, var(--rule-2));
+  color: var(--ink);
+}
+
+.ck-filterchip.active {
+  border-color: var(--accent);
+  background: var(--paper-3);
+  color: var(--ink);
+}
+
+/* Band wrapper: spacing lives on the adjacent-sibling gap, not on the
+   bandhead's own margin - each band is its own container div, so a
+   `:first-child` rule on `.ck-bandhead` would match inside every band
+   (each head is the first child of its own wrapper) and never actually
+   distinguish the page's first band from the rest. */
+.ck-band + .ck-band {
+  margin-top: 26px;
+}
+
+.ck-bandhead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 10px;
+}
+
+.ck-bandhead .ct {
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.ck-bandhead .n {
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--ink-4);
+}
+
+.ck-bandhead .more {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--accent-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Static (non-clickable) bandhead trailing text (frame S: "click a row →
+   rail") - stays dim, unlike `.more`'s accent link color, since there's
+   nothing to click here. */
+.ck-bandhead .hint {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--ink-4);
+}
+
+.concept-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.ck-concept-mini {
+  border: 1px solid var(--rule-2);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  background: color-mix(in srgb, var(--paper-2) 30%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.ck-concept-mini:hover {
+  border-color: var(--rule);
+  background: color-mix(in srgb, var(--paper-2) 55%, transparent);
+}
+
+.ck-concept-mini .ct {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+}
+
+.ck-concept-mini .cm {
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--ink-3);
+}
+
+.refinery-caption {
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--ink-4);
+  margin: 14px 0 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .glance-grid {
+    grid-template-columns: 1fr;
+  }
+  .ck-statstrip {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .ck-typerow {
+    grid-row: 3;
+  }
+  .concept-mini-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Degraded tier (design pass Q4): annotate, never hide ---- */
+
+.degraded-band {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+  border-radius: var(--radius-md);
+  background: var(--warn-bg);
+  color: var(--warn);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.degraded-region {
+  border: 1px dashed var(--rule);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  color: var(--ink-3);
+}
+
+.degraded-region-head {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--warn);
+  margin-bottom: 6px;
+}
+
+.degraded-region-body {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ---- Control kit (design pass Q5) ---- */
+
+.ck-select {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.ck-select-label {
+  color: var(--ink-3);
+}
+
+.ck-select-shell {
+  position: relative;
+  display: block;
+}
+
+.ck-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 8px 30px 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-md);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ck-select select:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--glow-focus);
+}
+
+.ck-select-chevron {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-58%);
+  color: var(--ink-3);
+  pointer-events: none;
+}
+
+.ck-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  color: var(--ink-3);
+  background: var(--paper-2);
+}
+
+.ck-pill-positive {
+  color: var(--fresh);
+  border-color: color-mix(in srgb, var(--fresh) 35%, transparent);
+  background: color-mix(in srgb, var(--fresh) 10%, transparent);
+}
+
+.ck-pill-dim {
+  color: var(--ink-4);
+}
+
+.ck-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 4px 9px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  color: var(--ink-3);
+}
+
+.ck-cap-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ck-cap.on {
+  color: var(--fresh);
+  border-color: color-mix(in srgb, var(--fresh) 35%, transparent);
+}
+
+.ck-cap.off {
+  color: var(--ink-4);
+  border-style: dashed;
+}
+
+.ck-drag-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.ck-drag-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 9px 4px;
+  border-bottom: 1px solid var(--rule-2);
+  border-radius: var(--radius-sm);
+  cursor: grab;
+}
+
+.ck-drag-row:focus-visible {
+  outline: none;
+  box-shadow: var(--glow-focus);
+}
+
+.ck-drag-row.dragging {
+  opacity: 0.55;
+}
+
+.ck-drag-row.drag-over {
+  background: var(--accent-tinted-bg);
+}
+
+.ck-drag-grip {
+  color: var(--ink-4);
+  font-size: 13px;
+  line-height: 1;
+  user-select: none;
+}
+
+.settings-control-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 8px;
+}
+
+@media (max-width: 1100px) {
+  .concept-page,
+  .entry-page,
+  .hero,
+  .concepts-index-hero,
+  .constitution-main,
+  .search-layout,
+  .concept-editor-layout,
+  .health-triage-hero,
+  .health-triage-layout,
+  .settings-status-grid,
+  .settings-routing-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .cp-aside,
+  .concept-editor-side,
+  .health-signal-panel {
+    position: static;
+    max-height: none;
+  }
+
+  .concept-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .concepts-index-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .topbar {
+    top: 0;
+    padding: 0 16px;
+  }
+
+  .search-metrics,
+  .search-selector-row,
+  .concepts-index-metrics,
+  .concepts-index-grid,
+  .health-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .concepts-index-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .concepts-index-sort {
+    width: 100%;
+  }
+
+  .settings-provider-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+/* ---- Vault view layer: entry cards, timeline, lenses ---- */
+
+.entry-type-log { --entry-accent: var(--entry-log); }
+.entry-type-timetrack { --entry-accent: var(--entry-log); }
+.entry-type-task { --entry-accent: var(--entry-task); }
+.entry-type-block { --entry-accent: var(--entry-block); }
+.entry-type-idea { --entry-accent: var(--entry-idea); }
+.entry-type-decision { --entry-accent: var(--entry-decision); }
+.entry-type-question { --entry-accent: var(--entry-question); }
+.entry-type-gap { --entry-accent: var(--entry-gap); }
+.entry-type-analogy { --entry-accent: var(--entry-analogy); }
+
+.timeline-day-header {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-3);
+  padding: 18px 0 6px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 4px;
+}
+
+.timeline-page .btn {
+  margin-top: 18px;
+}
+
+.lens-page .lens-count {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-3);
+  margin: 0 0 12px;
+}
+
+/* ============================================================
+   Selected-entry rail (design pass v4 frame O/P, D1). A row click
+   opens the entry into a 380px sticky rail beside the list instead of
+   navigating away - the list keeps its scroll position because the
+   list DOM is never replaced. Responsive collapse (frame P): below
+   1180px the rail track never reserves space (`:has()` gate below)
+   and entry-card.ts's matchMedia check sends row clicks straight to
+   `/entries/:id` instead of opening the rail.
+   ============================================================ */
+.entry-rail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+@media (min-width: 1180px) {
+  .entry-rail-layout:has(.entry-rail:not([hidden])) {
+    grid-template-columns: minmax(0, 1fr) 380px;
+  }
+}
+
+/* Sticky rail, matching the .cp-aside pattern
+   already established for this shell's chrome-height budget. */
+.entry-rail {
+  position: sticky;
+  top: 64px;
+  max-height: calc(100vh - 84px);
+  overflow-y: auto;
+  border-left: 1px solid var(--rule-2);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  background: color-mix(in oklab, var(--paper-2) 55%, transparent);
+  display: flex;
+  flex-direction: column;
+}
+
+.entry-rail[hidden] {
+  display: none;
+}
+
+.entry-rail-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.entry-rail-position {
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--ink-3);
+}
+
+.entry-rail-nav {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.entry-rail-nav-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  border: 1px solid var(--rule-2);
+  background: transparent;
+  font-size: var(--fs-body);
+  cursor: pointer;
+}
+
+.entry-rail-nav-btn:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--rule);
+}
+
+.entry-rail-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.entry-rail-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.entry-rail-title {
+  font-family: var(--sans);
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--ink);
+  margin: 6px 0 0;
+}
+
+/* The rail's compact body pipeline drops the full-page serif treatment -
+   the rail is chrome, not a reading surface (frame O uses the shell's
+   sans stack throughout). */
+.entry-rail .entry-body {
+  font-family: var(--sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.entry-rail-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: var(--fs-hint);
+  color: var(--accent-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.entry-rail-open:hover {
+  text-decoration: underline;
+}
+
+.entry-rail-loading,
+.entry-rail-empty {
+  padding: 24px 20px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: var(--fs-meta);
+}
+
+/* Active-row state (frame O): applied directly to the already-mounted
+   viewer-entry-row list item via entry-card.ts's setActiveEntryRow - no
+   re-render, so the list never loses its scroll position when the rail
+   selection changes. */
+.entry-row-active .lb-viewer-entry-row {
+  background: color-mix(in oklab, var(--paper-3) 70%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.entry-row-active .lb-viewer-entry-row-rim {
+  box-shadow: 0 0 10px color-mix(in oklab, var(--lb-entry-row-color) 70%, transparent);
+}
+
+/* Below the rail breakpoint (frame P) a still-open rail (e.g. the window
+   shrank while it was open) drops out of sticky positioning and stacks
+   under the list instead of pinning to a viewport it no longer fits. */
+@media (max-width: 1179px) {
+  .entry-rail {
+    position: static;
+    max-height: none;
+  }
+}
+
+/* Route/boot failure surfaces (release review P0-2). */
+.route-error,
+.boot-error {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 48px 40px;
+  max-width: 560px;
+}
+
+.route-error-detail {
+  color: var(--warn);
+  background: var(--warn-bg);
+  border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  overflow-wrap: anywhere;
+}
+
+/* Rail "all routes -> N" footer link (release review P0-7 route census):
+   reuses .nav-item's layout, muted/italic to read as a see-more action
+   rather than another route. */
+.nav-item-more {
+  font-style: italic;
+  color: var(--ink-3);
+}
+
+/* All-routes index (/routes, release review P0-7). */
+.routes-index { display: flex; flex-direction: column; }
+.routes-index-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--rule-2);
+  text-decoration: none;
+}
+.routes-index-row:hover { background: var(--paper-2); }
+
+/* Subpage viewer (release fixes): single-column reading measure. */
+.page-view { max-width: 720px; }
+.page-view .entry-body { margin-top: 16px; }

@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>LogMark.Mcp</RootNamespace>
+    <!-- Open substrate MCP server: kernel-referencing tools only. In the private
+         repo this is a dev/test build named LogMark.Mcp; the shipped executable
+         is the closed LogMark.Mcp.Producers (assembly name `logmark-mcp`), which
+         references this project and adds the closed tools/services. When mirrored
+         into the public tree (Producers absent) the OSS overlay sets OssBuild=true
+         so the open server itself emits `logmark-mcp`. -->
+    <AssemblyName Condition="'$(OssBuild)' == 'true'">logmark-mcp</AssemblyName>
+    <AssemblyName Condition="'$(OssBuild)' != 'true'">LogMark.Mcp</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Open substrate MCP server references the Kernel only. All Core-referencing
+         MCP code moved to the closed LogMark.Mcp.Producers project (Task 4 OSS
+         split). This keeps the mirrored open project compiling against the open
+         substrate alone. -->
+    <ProjectReference Include="..\LogMark.Kernel\LogMark.Kernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="LogMark.Mcp.Tests" />
+    <!-- The closed producer build (assembly name `logmark-mcp`) reaches internal
+         MCP helpers from its moved tool files and its ClosedProgram entry point. -->
+    <InternalsVisibleTo Include="logmark-mcp" />
+  </ItemGroup>
+
+  <!-- Kill logmark-mcp processes that lock THIS repo's build output before a
+       Release build. Scoped with -UnderPath: agent sessions run the dev-live
+       copy at %LocalAppData%\LogMark-Dev\mcp (and an installed build runs from
+       %LocalAppData%\LogMark\current), neither of which locks anything a build
+       writes to. The unscoped kill this used to do dropped every live agent
+       session on the machine for no reason. See "Dev-live MCP" in CLAUDE.md. -->
+  <Target Name="KillMcpServers" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release' And '$(OS)' == 'Windows_NT' And Exists('$(MSBuildThisFileDirectory)..\..\scripts\Kill-McpProcesses.ps1')">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)..\..\scripts\Kill-McpProcesses.ps1&quot; -UnderPath &quot;$(MSBuildThisFileDirectory)..\..&quot;"
+          IgnoreExitCode="true"
+          StandardOutputImportance="low" />
+  </Target>
+
+  <!-- The Claude Desktop .mcpb bundle is built by scripts\Release-LogMark.ps1
+       from the win-x64 publish staging (clean, de-duplicated) during a release,
+       NOT here. A plain `dotnet build` output carries every platform's local
+       embedding-model native runtime (~150 MB) plus a nested win-x64 duplicate,
+       so packaging from it produced a bloated, non-shippable bundle. Run
+       scripts\build-mcpb.ps1 manually (point -SourceDir at a `publish -r win-x64`
+       dir) to test locally. -->
+
+</Project>

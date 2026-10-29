@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>LogMark.CLI</RootNamespace>
+    <!-- Open substrate CLI: kernel-referencing verbs only. In the private repo
+         this is a dev/test build named LogMark.CLI; the shipped executable is
+         the closed LogMark.CLI.Producers (assembly name `lm`), which references
+         this project and adds the closed verbs. When mirrored into the public
+         tree (Producers absent) the OSS overlay sets OssBuild=true so the open
+         CLI itself emits `lm`. -->
+    <AssemblyName Condition="'$(OssBuild)' == 'true'">lm</AssemblyName>
+    <AssemblyName Condition="'$(OssBuild)' != 'true'">LogMark.CLI</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Open substrate CLI references the Kernel only. All Core-referencing CLI
+         code moved to the closed LogMark.CLI.Producers project (Task 4 OSS
+         split). This keeps the mirrored open project compiling against the open
+         substrate alone. -->
+    <ProjectReference Include="..\LogMark.Kernel\LogMark.Kernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="LogMark.CLI.Tests" />
+    <!-- The closed producer build (assembly name `lm`) reaches internal CLI
+         helpers such as HookDiagnostics from its moved command files. -->
+    <InternalsVisibleTo Include="lm" />
+    <!-- OpenBuildContractTests (Task 4 chunk 7) drives Program.BuildRegistry
+         to verify the open-only shape from the closed test project. -->
+    <InternalsVisibleTo Include="LogMark.CLI.Producers.Tests" />
+  </ItemGroup>
+
+  <!-- T1 embedding model asset linking lives on the closed LogMark.CLI.Producers
+       build only (the shipped `lm` executable): the open substrate CLI's
+       SemanticSearchService is always null (see CliContext.SemanticSearchService),
+       so it never needs the model file on disk. Task 4 chunk 10 moved the
+       Content block that used to live here to LogMark.CLI.Producers.csproj. -->
+
+</Project>

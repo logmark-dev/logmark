@@ -1,0 +1,61 @@
+{
+  "valid": [
+    {
+      "name": "scoped-slice",
+      "envelope": {
+        "type": "vault-summary",
+        "version": 1,
+        "data": {
+          "scopeText": "question, last 90 days",
+          "totalMatched": 42
+        },
+        "meta": {
+          "source": "native-viewer",
+          "generatedAt": "2026-07-12T10:00:00Z"
+        }
+      },
+      "assertions": {
+        "totalMatched": 42
+      }
+    },
+    {
+      "name": "empty-slice",
+      "envelope": {
+        "type": "vault-summary",
+        "version": 1,
+        "data": {
+          "scopeText": "all entries",
+          "totalMatched": 0
+        }
+      },
+      "assertions": {
+        "totalMatched": 0
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "missing-total",
+      "expectedError": "totalMatched",
+      "envelope": {
+        "type": "vault-summary",
+        "version": 1,
+        "data": {
+          "scopeText": "all entries"
+        }
+      }
+    },
+    {
+      "name": "negative-total",
+      "expectedError": "minimum",
+      "envelope": {
+        "type": "vault-summary",
+        "version": 1,
+        "data": {
+          "scopeText": "all entries",
+          "totalMatched": -1
+        }
+      }
+    }
+  ]
+}

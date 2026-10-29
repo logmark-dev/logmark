@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "blocks": [
+    { "kind": "frontmatter", "entries": [
+      { "key": "title", "value": "Rich Document" },
+      { "key": "tags", "value": "design, lblocks" }
+    ]},
+    { "kind": "heading", "level": 1, "children": [{ "kind": "text", "text": "Rich Document" }] },
+    { "kind": "paragraph", "children": [
+      { "kind": "text", "text": "Mix of " },
+      { "kind": "emphasis", "style": "bold", "children": [{ "kind": "text", "text": "bold" }] },
+      { "kind": "text", "text": ", " },
+      { "kind": "emphasis", "style": "italic", "children": [{ "kind": "text", "text": "italic" }] },
+      { "kind": "text", "text": ", and " },
+      { "kind": "code-span", "text": "code()" },
+      { "kind": "text", "text": " inline." }
+    ]},
+    { "kind": "heading", "level": 2, "children": [{ "kind": "text", "text": "List" }] },
+    { "kind": "list", "ordered": false, "items": [
+      { "children": [{ "kind": "paragraph", "children": [{ "kind": "text", "text": "First" }] }] },
+      { "children": [
+        { "kind": "paragraph", "children": [{ "kind": "text", "text": "Second with nested" }] },
+        { "kind": "list", "ordered": true, "items": [
+          { "children": [{ "kind": "paragraph", "children": [{ "kind": "text", "text": "nested a" }] }] },
+          { "children": [{ "kind": "paragraph", "children": [{ "kind": "text", "text": "nested b" }] }] }
+        ]}
+      ]}
+    ]},
+    { "kind": "blockquote", "children": [
+      { "kind": "paragraph", "children": [{ "kind": "text", "text": "A quoted paragraph." }] }
+    ]},
+    { "kind": "codeblock", "language": "typescript", "text": "function hello() {\n  return 'world'\n}" },
+    { "kind": "divider" },
+    { "kind": "paragraph", "children": [
+      { "kind": "link", "href": "https://logmark.dev", "children": [{ "kind": "text", "text": "External link" }] }
+    ]}
+  ]
+}

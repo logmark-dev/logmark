@@ -1,0 +1,96 @@
+{
+  "valid": [
+    {
+      "name": "typical-week",
+      "envelope": {
+        "type": "activity-chart",
+        "version": 1,
+        "data": {
+          "days": [
+            { "label": "Mon", "count": 12 },
+            { "label": "Tue", "count": 5 },
+            { "label": "Wed", "count": 18 },
+            { "label": "Thu", "count": 3 },
+            { "label": "Fri", "count": 9 },
+            { "label": "Sat", "count": 1 },
+            { "label": "Sun", "count": 0 }
+          ]
+        },
+        "meta": {
+          "source": "digest",
+          "period": { "start": "2026-03-24", "end": "2026-03-30" },
+          "generatedAt": "2026-03-30T18:00:00Z",
+          "inference": null,
+          "renderHints": { "weight": "half", "density": "compact" }
+        }
+      },
+      "assertions": {
+        "totalCount": 48,
+        "peakDay": "Wed"
+      }
+    },
+    {
+      "name": "empty-week",
+      "envelope": {
+        "type": "activity-chart",
+        "version": 1,
+        "data": {
+          "days": [
+            { "label": "Mon", "count": 0 },
+            { "label": "Tue", "count": 0 },
+            { "label": "Wed", "count": 0 },
+            { "label": "Thu", "count": 0 },
+            { "label": "Fri", "count": 0 },
+            { "label": "Sat", "count": 0 },
+            { "label": "Sun", "count": 0 }
+          ]
+        },
+        "meta": {
+          "source": "digest",
+          "period": { "start": "2026-03-17", "end": "2026-03-23" },
+          "generatedAt": "2026-03-23T18:00:00Z",
+          "inference": null
+        }
+      },
+      "assertions": {
+        "totalCount": 0,
+        "peakDay": null
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "missing-day",
+      "expectedError": "minItems",
+      "envelope": {
+        "type": "activity-chart",
+        "version": 1,
+        "data": {
+          "days": [
+            { "label": "Mon", "count": 5 },
+            { "label": "Tue", "count": 3 }
+          ]
+        }
+      }
+    },
+    {
+      "name": "negative-count",
+      "expectedError": "minimum",
+      "envelope": {
+        "type": "activity-chart",
+        "version": 1,
+        "data": {
+          "days": [
+            { "label": "Mon", "count": -1 },
+            { "label": "Tue", "count": 3 },
+            { "label": "Wed", "count": 5 },
+            { "label": "Thu", "count": 2 },
+            { "label": "Fri", "count": 7 },
+            { "label": "Sat", "count": 1 },
+            { "label": "Sun", "count": 0 }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "blocks": [
+    { "kind": "heading", "level": 1, "children": [{ "kind": "text", "text": "Minimal" }] },
+    { "kind": "paragraph", "children": [{ "kind": "text", "text": "A short paragraph." }] }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "manifest_version": "0.3",
+  "name": "logmark",
+  "display_name": "LogMark",
+  "version": "{VERSION}",
+  "description": "Capture and protocol system for developers - vault MCP server",
+  "author": { "name": "LogMark", "url": "https://logmark.dev" },
+  "homepage": "https://logmark.dev",
+  "server": {
+    "type": "binary",
+    "entry_point": "server/logmark-mcp.exe",
+    "mcp_config": {
+      "command": "${__dirname}/server/logmark-mcp.exe",
+      "args": ["--agent", "claude-desktop"]
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["win32"]
+  }
+}

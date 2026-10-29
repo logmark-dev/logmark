@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logmark.dev/schemas/viewblocks/viewer-entry-card.json",
+  "title": "Viewer Entry Card Block Data",
+  "description": "Read-only Native Viewer-style entry card data",
+  "type": "object",
+  "required": ["id", "entryType", "content", "timestamp", "route", "tags", "isCompleted", "links"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entryType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "content": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "route": {
+      "type": ["string", "null"]
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "isCompleted": {
+      "type": "boolean"
+    },
+    "links": {
+      "type": "object",
+      "required": ["wiki", "routes", "tags", "blockRefs", "external"],
+      "additionalProperties": false,
+      "properties": {
+        "wiki": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "routes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "blockRefs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "external": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

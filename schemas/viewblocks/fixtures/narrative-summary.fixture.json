@@ -1,0 +1,61 @@
+{
+  "valid": [
+    {
+      "name": "llm-summary",
+      "envelope": {
+        "type": "narrative-summary",
+        "version": 1,
+        "data": {
+          "text": "This week you shipped the ViewBlock schema foundation and validated 48 entries across 4 routes. Your highest activity day was Wednesday with 18 entries. Three decisions were logged, suggesting a week of meaningful architectural choices.",
+          "inference": "L2"
+        },
+        "meta": {
+          "source": "digest",
+          "period": { "start": "2026-03-24", "end": "2026-03-30" },
+          "generatedAt": "2026-03-30T18:00:00Z",
+          "inference": "L2",
+          "renderHints": { "weight": "full", "density": "standard" }
+        }
+      },
+      "assertions": {
+        "inferenceUsed": true,
+        "minLength": 50
+      }
+    },
+    {
+      "name": "template-summary",
+      "envelope": {
+        "type": "narrative-summary",
+        "version": 1,
+        "data": {
+          "text": "48 entries captured across 7 days. Most active: Wednesday (18). Top route: inbox.",
+          "inference": null
+        },
+        "meta": {
+          "source": "digest",
+          "period": { "start": "2026-03-24", "end": "2026-03-30" },
+          "generatedAt": "2026-03-30T18:00:00Z",
+          "inference": null,
+          "renderHints": { "weight": "full", "density": "compact" }
+        }
+      },
+      "assertions": {
+        "inferenceUsed": false
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "empty-text",
+      "expectedError": "minLength",
+      "envelope": {
+        "type": "narrative-summary",
+        "version": 1,
+        "data": {
+          "text": "",
+          "inference": null
+        }
+      }
+    }
+  ]
+}

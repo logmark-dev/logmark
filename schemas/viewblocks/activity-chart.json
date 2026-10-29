@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logmark.dev/schemas/viewblocks/activity-chart.json",
+  "title": "Activity Chart Block Data",
+  "description": "Seven-day activity chart showing entry counts per day",
+  "type": "object",
+  "required": ["days"],
+  "additionalProperties": false,
+  "properties": {
+    "days": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "required": ["label", "count"],
+        "additionalProperties": false,
+        "properties": {
+          "label": {
+            "type": "string",
+            "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            "description": "Day of week abbreviation"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of entries on this day"
+          }
+        }
+      }
+    }
+  }
+}

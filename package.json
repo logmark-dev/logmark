@@ -1,0 +1,22 @@
+{
+  "name": "@logmark/cockpit",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "LogMark Engine cockpit - open-build config for the cockpit SPA. Minimal by design: only what 'vite build' needs, never the LogMark.Knowledge dev server's full dependency set. See scripts/oss/manifest.logmark.json's _notes and scripts/oss/publish-logmark.ps1.",
+  "scripts": {
+    "build": "npm run build:lblocks && npm run build:ui && npm run build:embed",
+    "build:lblocks": "tsc -p packages/lblocks",
+    "build:ui": "vite build",
+    "build:embed": "node build/embed-cockpit.mjs"
+  },
+  "dependencies": {
+    "@logmark/lblocks": "file:./packages/lblocks",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^6.0.0"
+  }
+}

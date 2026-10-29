@@ -1,0 +1,35 @@
+LogMark Engine
+Copyright 2026 Denis Darkin
+
+This product includes software developed by Denis Darkin and the LogMark
+contributors.
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License, version 3, as
+published by the Free Software Foundation. A copy of the License is in the
+LICENSE file distributed alongside this NOTICE, or at:
+
+    https://www.gnu.org/licenses/agpl-3.0.txt
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+details.
+
+Corresponding Source: https://github.com/logmark-dev/logmark (each release is
+tagged; the source of a release is the tree at its tag).
+
+Commercial licensing: if the AGPL does not fit your use (for example, shipping
+LogMark Engine inside a closed product or service), a commercial license is
+available from the copyright holder. Contact legal@logmark.dev.
+
+Trademarks: "LogMark", "LogMark Engine" and the LogMark emblem are trademarks
+of Denis Darkin. The AGPL-3.0 license covers the code and grants no trademark
+rights. You may use the names to say where the software came from; a modified
+version should carry its own name so users can tell the two apart.
+
+The vault format specification (lm-vault) is licensed separately under
+CC-BY-4.0: https://github.com/logmark-dev/lm-vault
+
+Third-party components redistributed with this software are inventoried, with
+their respective licenses, in THIRD-PARTY-NOTICES.md.

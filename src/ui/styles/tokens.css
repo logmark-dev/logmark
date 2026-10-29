@@ -1,0 +1,324 @@
+/* ============================================================
+   LogMark - Colors & Type (shared across all surfaces)
+   Visual language: warm sci-fi, soft, depth-aware, adaptive.
+   Source: docs/brand/visual-language.md, docs/brand/token-roles.md
+
+   VENDORED COPY - source of truth is the umbrella repo at
+   DesignSystem/colors_and_type.css. Do not edit here; re-copy
+   (plus fonts/) when the contract changes. Vendored 2026-07-13
+   for the cockpit UI redesign (plan:
+   docs/plans/2026-07-13-cockpit-ui-redesign-implementation.md).
+   ============================================================ */
+
+/* -------- Fonts --------
+   Font reality varies by surface (see platform/windows-11.md):
+     • LogMark (WPF flagship): inherits Segoe UI from Windows; Consolas
+       is the dominant explicit mono. Newer primitives use
+       MarkMonoFontFamily = Consolas, Cascadia Code, Courier New.
+     • lblocks / Knowledge / .dev (web): 'Segoe UI', system stack for
+       sans; 'Consolas', 'Courier New', monospace for mono.
+     • HTML mockups in this folder: Inter + JetBrains Mono as variable
+       webfonts so previews render consistently in any browser. These
+       are STAND-INS, not the production stack.
+   Substitutions flagged in README. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/Inter-Variable.woff2") format("woff2-variations");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("fonts/JetBrainsMono-Variable.woff2") format("woff2-variations");
+}
+
+/* ============================================================
+   COLOR TOKENS
+   ============================================================
+   Naming follows token-roles.md: roles, not descriptions.
+   Two themes: dark (default) and light.
+   Brand accent is warm amber. Cold blue is explicitly wrong.
+*/
+
+:root,
+:root[data-theme="dark"] {
+  /* ---- Surface roles (low to high) ---- */
+  --chrome:           #181826;   /* title bar, status bar */
+  --workspace:        #1E1E2E;   /* primary background, content canvas */
+  --card:             #2A2A3E;   /* tier-1 cards, secondary panels */
+  --card-elevated:    #3D2E14;   /* warm-tinted hover/selected */
+  --popup:            #323248;   /* modals, popups, dropdowns, tooltips */
+
+  /* ---- Text roles ---- */
+  --text-primary:     #E4E4E7;
+  --text-secondary:   #A1A1AA;
+  --text-muted:       #71717A;
+  --text-dim:         #52525B;
+  --text-on-accent:   #FFFFFF;
+
+  /* ---- Accent (warm amber, the brand) ---- */
+  --accent:           #C07A0A;   /* primary interactive */
+  --accent-hover:     #D4890E;
+  --accent-pressed:   #A06808;
+  --accent-tinted-bg: #3D2E14;   /* selection bg */
+  --accent-text:      #C07A0A;   /* amber as text */
+  --warm:             #F59E0B;   /* canonical brand amber, glows/highlights */
+
+  /* ---- Borders ---- */
+  --border:           #3F3F46;
+  --border-subtle:    rgba(255,255,255,0.06);
+  --border-strong:    #52525B;
+
+  /* ---- Signal (Mark's avatar states + entry types) ---- */
+  --signal-neutral:   #4A90B8;   /* idle/default */
+  --signal-positive:  #6BA36E;
+  --signal-alert:     #D4860A;
+  --signal-negative:  #C26B6B;
+  --signal-inquiry:   #9A7BB8;
+  --signal-focus:     #D4C26B;
+
+  --signal-positive-text: #6BA36E;
+  --signal-inquiry-text:  #9A7BB8;
+
+  /* ---- Entry types ----
+     8 canonical types in two tiers.
+     Basic:    log, task, block, idea, decision
+     Advanced: question, gap, analogy
+     Colors are functional (carry the type signal), not brand.
+     Aligned with the LogMark product name: an unprefixed capture
+     becomes a log entry. `diary` is preserved as a legacy alias
+     for any surface that hasn't been swept yet. */
+  /* Basic */
+  --entry-log:      #71717A;   /* muted gray, recedes */
+  --entry-task:     #4A90B8;   /* matches signal-neutral */
+  --entry-block:    #C26B6B;   /* matches signal-negative - a hard impediment */
+  --entry-idea:     #F59E0B;   /* matches warm */
+  --entry-decision: #9A7BB8;   /* matches signal-inquiry */
+  /* Advanced */
+  --entry-question: #7C3AED;   /* variant of inquiry */
+  --entry-gap:      #D4860A;   /* matches signal-alert - a known missing piece */
+  --entry-analogy:  #D4C26B;   /* matches signal-focus - a high-bandwidth bridge */
+  /* Legacy alias - some surfaces still ship `--entry-diary`. Maps to log. */
+  --entry-diary:    var(--entry-log);
+
+  /* ---- Glow (the soft sci-fi feedback mechanism) ---- */
+  --glow-accent:    0 0 20px rgba(245, 158, 11, 0.25);
+  --glow-focus:     0 0 0 3px rgba(245, 158, 11, 0.20);
+  --glow-soft:      0 0 12px rgba(245, 158, 11, 0.15);
+
+  /* ---- Shadow (ambient/diffuse, never harsh) ---- */
+  --shadow-card:    0 1px 2px rgba(0,0,0,0.20), 0 2px 8px rgba(0,0,0,0.15);
+  --shadow-popup:   0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.30);
+  --shadow-modal:   0 20px 60px rgba(0,0,0,0.55), 0 8px 24px rgba(0,0,0,0.35);
+
+  /* ---- Inner highlight for depth ---- */
+  --inner-light:    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+:root[data-theme="light"] {
+  /* light theme - PAPER (warm-paper reskin, 2026-06-06)
+     Surfaces shift from cool Windows-white to warm cream; ink goes
+     warm-brown; accent deepens to amber for AA on cream; entry-task /
+     entry-block warm-corrected off cold blue / pure red. Dark theme
+     is unchanged. Source: DesignSystem/light-paper-change-request.md */
+  --chrome:           #F4EFE4;   /* topbar · statusbar · sidebar */
+  --workspace:        #F9F5EC;   /* primary canvas - light warm cream */
+  --card:             #FDFCF8;   /* cards / panels - near-white, faint warm */
+  --card-elevated:    #F4ECDA;   /* hover / selected - warm tint */
+  --popup:            #FFFEFC;   /* modals / dropdowns */
+
+  --text-primary:     #2A2218;   /* warm-brown ink */
+  --text-secondary:   #6B5C44;
+  --text-muted:       #8A7A60;
+  --text-dim:         #B0A088;
+  --text-on-accent:   #FFFFFF;
+
+  --accent:           #C0871F;   /* amber, deepened for AA on cream */
+  --accent-hover:     #D89A2E;
+  --accent-pressed:   #A06808;
+  --accent-tinted-bg: #F4ECDA;
+  --accent-text:      #92400E;   /* amber-as-text, AA on cream */
+  --warm:             #D97706;
+
+  --border:           #E2D8C6;   /* warm hairline - keep visible on light paper */
+  --border-subtle:    rgba(120,90,40,0.12);  /* chrome dividers */
+  --border-strong:    #D2C6AF;
+
+  --signal-neutral:   #4A90B8;
+  --signal-positive:  #3F6B41;
+  --signal-alert:     #B96A0A;
+  --signal-negative:  #9F4848;
+  --signal-inquiry:   #5C3F7A;
+  --signal-focus:     #A8911B;
+
+  --signal-positive-text: #3F6B41;
+  --signal-inquiry-text:  #5C3F7A;
+
+  /* Entry types - same contract, two warm-corrected. See dark theme
+     for full taxonomy. */
+  --entry-log:      #71717A;
+  --entry-task:     #4A90B8;   /* was #3B82F6 (cold blue clashed on cream) */
+  --entry-block:    #9F4848;   /* was #DC2626 (pure red clashed on cream) */
+  --entry-idea:     #D97706;
+  --entry-decision: #7C3AED;
+  --entry-question: #6D28D9;
+  --entry-gap:      #B96A0A;
+  --entry-analogy:  #A8911B;
+  --entry-diary:    var(--entry-log);
+
+  /* Serif display face - light only. Weight eases to 500; the serif
+     carries the emphasis. WPF has no bundled serif, so Georgia is the
+     production fallback (Newsreader is the kit/web ideal). */
+  --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+
+  /* warm-tinted glows / shadows */
+  --glow-accent:    0 0 16px rgba(217,119,6,0.16);
+  --glow-focus:     0 0 0 3px rgba(192,135,31,0.22);
+  --glow-soft:      0 0 10px rgba(217,119,6,0.10);
+
+  --shadow-card:    0 1px 2px rgba(120,90,40,0.05), 0 2px 10px rgba(120,90,40,0.06);
+  --shadow-popup:   0 8px 24px rgba(120,90,40,0.12), 0 2px 8px rgba(120,90,40,0.07);
+  --shadow-modal:   0 20px 60px rgba(120,90,40,0.20), 0 8px 24px rgba(120,90,40,0.12);
+
+  --inner-light:    inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+/* ============================================================
+   TYPOGRAPHY TOKENS
+   Hierarchy from visual-language.md:
+   primary header 18sb, secondary 14sb, body 13r, secondary 12r,
+   hint 11r. We expose both base tokens AND semantic role styles.
+*/
+:root {
+  /* Mockup stack (Inter / JetBrains Mono load first for consistent
+     preview rendering, with the real production stack - Segoe UI /
+     Consolas - as the next fallback). Production WPF inherits Segoe UI
+     and uses Consolas explicitly; the web surfaces lead with Segoe UI
+     directly. See platform/windows-11.md. */
+  --font-sans: "Inter", "Segoe UI", -apple-system, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Consolas", "Cascadia Code", "Courier New", ui-monospace, monospace;
+
+  /* Sizes - tight scale to match the desktop product's density */
+  --fs-hint:    11px;
+  --fs-meta:    12px;
+  --fs-body:    13px;
+  --fs-h2:      14px;
+  --fs-h1:      18px;
+  --fs-display: 24px;
+
+  /* Weights */
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+
+  /* Line heights - generous, per the spec */
+  --lh-tight:  1.25;
+  --lh-body:   1.55;
+  --lh-loose:  1.7;
+
+  /* Tracking - subtle */
+  --ls-tight: -0.01em;
+  --ls-body:   0;
+  --ls-loose:  0.02em;
+
+  /* Spacing scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radii - soft, not hard */
+  --radius-sm:   4px;   /* inputs, small chips */
+  --radius-md:   6px;   /* buttons */
+  --radius-lg:   8px;   /* cards, modals */
+  --radius-xl:   12px;  /* major panels */
+  --radius-full: 999px; /* pills, orbs */
+
+  /* Motion */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:    150ms;
+  --dur-base:    200ms;
+  --dur-slow:    300ms;
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT STYLES - apply globally when this stylesheet
+   is the page's CSS reset.
+*/
+html, body {
+  background: var(--workspace);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, .h1 {
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--text-primary);
+  margin: 0;
+}
+h2, .h2 {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  color: var(--text-primary);
+  margin: 0;
+}
+.display {
+  font-size: var(--fs-display);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+}
+p, .body { font-size: var(--fs-body); line-height: var(--lh-body); color: var(--text-primary); margin: 0; }
+.meta   { font-size: var(--fs-meta); color: var(--text-secondary); }
+.muted  { color: var(--text-muted); }
+.dim    { color: var(--text-dim); }
+.hint   { font-size: var(--fs-hint); color: var(--text-muted); }
+code, .code, kbd { font-family: var(--font-mono); font-size: 0.92em; }
+kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: var(--fs-hint);
+  line-height: 1.4;
+}
+
+/* ============================================================
+   SERIF DISPLAY HEADERS - light theme only (PAPER reskin).
+   The display tier gets the serif face; weight eases to medium
+   (500) because the serif carries the emphasis. Body, labels,
+   mono, stat numbers, and HeroNumber stay sans. Dark theme is
+   untouched. Source: light-paper-change-request.md section 2.
+*/
+:root[data-theme="light"] h1,
+:root[data-theme="light"] .h1,
+:root[data-theme="light"] .display,
+:root[data-theme="light"] .lp-pagehead-title,
+:root[data-theme="light"] .lp-summary-hello,
+:root[data-theme="light"] .lp-lensview-title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+}

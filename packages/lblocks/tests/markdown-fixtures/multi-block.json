@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "blocks": [
+    { "kind": "heading", "level": 1, "children": [{ "kind": "text", "text": "Multi-block document" }] },
+    { "kind": "paragraph", "children": [{ "kind": "text", "text": "Paragraph one with some body text to make line wrapping observable." }] },
+    { "kind": "paragraph", "children": [{ "kind": "text", "text": "Paragraph two." }] },
+    { "kind": "heading", "level": 2, "children": [{ "kind": "text", "text": "Section A" }] },
+    { "kind": "paragraph", "children": [{ "kind": "text", "text": "Paragraph three." }] },
+    { "kind": "list", "ordered": false, "items": [
+      { "children": [{ "kind": "paragraph", "children": [{ "kind": "text", "text": "Item A" }] }] },
+      { "children": [{ "kind": "paragraph", "children": [{ "kind": "text", "text": "Item B" }] }] },
+      { "children": [{ "kind": "paragraph", "children": [{ "kind": "text", "text": "Item C" }] }] }
+    ]},
+    { "kind": "heading", "level": 2, "children": [{ "kind": "text", "text": "Section B" }] },
+    { "kind": "blockquote", "children": [
+      { "kind": "paragraph", "children": [{ "kind": "text", "text": "Quoted paragraph." }] }
+    ]},
+    { "kind": "codeblock", "text": "const a = 1\nconst b = 2\nconsole.log(a + b)" },
+    { "kind": "divider" },
+    { "kind": "paragraph", "children": [{ "kind": "text", "text": "Final paragraph." }] }
+  ]
+}

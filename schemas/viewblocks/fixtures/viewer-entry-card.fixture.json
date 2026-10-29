@@ -1,0 +1,80 @@
+{
+  "valid": [
+    {
+      "name": "decision-with-route",
+      "envelope": {
+        "type": "viewer-entry-card",
+        "version": 1,
+        "data": {
+          "id": "entry-1",
+          "entryType": "decision",
+          "content": "d: Ship the public viewer with [[Native Viewer]] parity #viewer",
+          "timestamp": "2026-05-20T10:00:00Z",
+          "route": "+ink",
+          "tags": ["viewer"],
+          "isCompleted": false,
+          "links": {
+            "wiki": ["Native Viewer"],
+            "routes": ["+ink"],
+            "tags": ["viewer"],
+            "blockRefs": [],
+            "external": []
+          }
+        },
+        "meta": {
+          "source": "ink",
+          "generatedAt": "2026-05-20T10:00:00Z",
+          "inference": null,
+          "renderHints": { "weight": "full", "density": "standard" }
+        }
+      },
+      "assertions": {
+        "entryType": "decision",
+        "route": "+ink"
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "missing-links",
+      "expectedError": "links",
+      "envelope": {
+        "type": "viewer-entry-card",
+        "version": 1,
+        "data": {
+          "id": "entry-1",
+          "entryType": "decision",
+          "content": "Missing link set",
+          "timestamp": "2026-05-20T10:00:00Z",
+          "route": "+ink",
+          "tags": [],
+          "isCompleted": false
+        }
+      }
+    },
+    {
+      "name": "invalid-timestamp",
+      "expectedError": "format",
+      "envelope": {
+        "type": "viewer-entry-card",
+        "version": 1,
+        "data": {
+          "id": "entry-1",
+          "entryType": "decision",
+          "content": "Bad timestamp",
+          "timestamp": "not-a-date",
+          "route": null,
+          "tags": [],
+          "isCompleted": false,
+          "links": {
+            "wiki": [],
+            "routes": [],
+            "tags": [],
+            "blockRefs": [],
+            "external": []
+          }
+        }
+      }
+    }
+  ]
+}

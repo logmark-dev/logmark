@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logmark.dev/schemas/viewblocks/narrative-summary.json",
+  "title": "Narrative Summary Block Data",
+  "description": "AI or template-generated narrative text summarizing a period or context",
+  "type": "object",
+  "required": ["text"],
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Narrative text content"
+    },
+    "inference": {
+      "enum": ["L0", "L1", "L2", "L3", null],
+      "description": "Inference tier used to generate this summary, or null for template-generated"
+    }
+  }
+}

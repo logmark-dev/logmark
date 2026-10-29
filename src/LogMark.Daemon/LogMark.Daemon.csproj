@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>LogMark.Daemon</RootNamespace>
+    <!-- The unified `logmark` binary. In the private repo this stays
+         `logmark-daemon` (the desktop feed and dev tooling reference that
+         name); when mirrored into the public OSS tree the overlay sets
+         OssBuild=true so the same binary emits the shipped `logmark` name.
+         Same switch pattern as LogMark.CLI (`lm`) and LogMark.Mcp
+         (`logmark-mcp`). The daemon is not bundled in the desktop installer
+         (verified: no Product.wxs / Release-LogMark.ps1 reference), so the
+         rename is packaging-safe. -->
+    <AssemblyName Condition="'$(OssBuild)' == 'true'">logmark</AssemblyName>
+    <AssemblyName Condition="'$(OssBuild)' != 'true'">logmark-daemon</AssemblyName>
+  </PropertyGroup>
+
+  <!-- OPEN ARTIFACT: references the OPEN substrate only - LogMark.Kernel plus
+       the two open composition roots (LogMark.CLI kernel verbs, LogMark.Mcp
+       stdio server) the unified binary dispatches into in-process. All three
+       are Kernel-only open projects; no closed assembly or package is
+       reachable here - enforced by DaemonPurityTests. -->
+  <ItemGroup>
+    <ProjectReference Include="..\LogMark.Kernel\LogMark.Kernel.csproj" />
+    <ProjectReference Include="..\LogMark.CLI\LogMark.CLI.csproj" />
+    <ProjectReference Include="..\LogMark.Mcp\LogMark.Mcp.csproj" />
+  </ItemGroup>
+
+  <!-- Cockpit SPA drop for the unified binary. The publish chunk (Task 5
+       Steps 3-4) copies the LogMark.Knowledge Vite build output into
+       `cockpit-dist/` here before `dotnet publish`, so the cockpit embeds
+       into THIS binary regardless of where the LogMark.Knowledge repo sits
+       relative to the tree (the sibling Kernel glob that bakes from
+       ../../../LogMark.Knowledge/dist/ui only fires in the private umbrella
+       layout; it is absent in the OSS mirror). Exists-guarded, so a plain
+       dev build with no cockpit-dist/ is inert and CockpitStaticServer serves
+       its API-only notice. Resource names land as `LogMark.Daemon.cockpit.*`
+       (RootNamespace + Link-derived naming); CockpitStaticServer auto-detects
+       that prefix in the entry assembly and merges it with the Kernel-baked
+       set. See CockpitStaticServer's class doc for the naming rationale. -->
+  <ItemGroup>
+    <EmbeddedResource Include="cockpit-dist\**\*" Condition="Exists('cockpit-dist')">
+      <Link>cockpit\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- Exposes internal helpers (YieldWatch) so the standby-loop's
+       per-iteration watch lifecycle has a testable seam without making the
+       Main loop's internals public. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="LogMark.Daemon.Tests" />
+  </ItemGroup>
+
+</Project>

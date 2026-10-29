@@ -1,0 +1,60 @@
+{
+  "valid": [
+    {
+      "name": "mature-concept",
+      "envelope": {
+        "type": "concept-page",
+        "version": 1,
+        "data": {
+          "slug": "free-energy-principle",
+          "title": "Free Energy Principle",
+          "status": "mature",
+          "tags": ["cognition", "neuroscience"],
+          "body": "## Core claim\n\nOrganisms minimize surprise by updating an internal model.\n\n- Perception updates the model\n- Action changes the world to match it\n\n> Prediction error is the currency of cognition.",
+          "sourceCount": 12,
+          "relatedConcepts": ["active-inference", "predictive-processing"]
+        },
+        "meta": {
+          "source": "knowledge-distill",
+          "generatedAt": "2026-07-12T09:00:00Z",
+          "inference": "L2",
+          "renderHints": { "weight": "full", "density": "standard" }
+        }
+      }
+    },
+    {
+      "name": "fresh-draft",
+      "envelope": {
+        "type": "concept-page",
+        "version": 1,
+        "data": {
+          "slug": "substrate-split",
+          "title": "Substrate Split",
+          "status": "draft",
+          "tags": [],
+          "body": "Open kernel, closed judgment.",
+          "sourceCount": 0,
+          "relatedConcepts": []
+        }
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "missing-title",
+      "expectedError": "title",
+      "envelope": {
+        "type": "concept-page",
+        "version": 1,
+        "data": {
+          "slug": "free-energy-principle",
+          "status": "draft",
+          "tags": [],
+          "body": "Body without a title.",
+          "sourceCount": 1,
+          "relatedConcepts": []
+        }
+      }
+    }
+  ]
+}

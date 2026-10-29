@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Markdown Fixture Harness</title>
+  <style>
+    html, body { margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module">
+    import { renderMarkdown } from '/index.js'
+    const params = new URLSearchParams(location.search)
+    const theme = params.get('theme') === 'light' ? 'light' : 'dark'
+    window.renderFixture = function(json) {
+      const doc = JSON.parse(json)
+      const container = document.getElementById('root')
+      renderMarkdown(doc, container, { theme })
+    }
+  </script>
+</body>
+</html>

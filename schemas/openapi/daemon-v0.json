@@ -1,0 +1,457 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "LogMark daemon HTTP/SSE API",
+    "version": "v0",
+    "summary": "Loopback contract between `logmark serve` (or the desktop app while hosting) and cockpit / agent consumers.",
+    "description": "The LogMark Engine daemon serves a LogMark vault over loopback HTTP. Response shapes are normatively the cockpit TypeScript types in `src/types/` (the cockpit sources in the logmark repository) plus the executable mock-daemon fixture; this document describes them. Two deliberate divergences an agent must know: (1) missing-resource reads return 200 with a null payload (`{ \"entry\": null }`), not a 404; (2) errors are RFC 9457 `application/problem+json`. Prose reference: umbrella `docs/reference/daemon-http-api-spec.md`.",
+    "license": { "name": "Apache-2.0" }
+  },
+  "servers": [
+    { "url": "http://127.0.0.1:4747", "description": "Canonical loopback port" }
+  ],
+  "paths": {
+    "/api/v0/openapi.json": {
+      "get": {
+        "summary": "This document",
+        "description": "Serves this OpenAPI document byte-for-byte from the daemon's embedded copy.",
+        "responses": {
+          "200": {
+            "description": "The OpenAPI document",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "404": { "$ref": "#/components/responses/Problem" }
+        }
+      }
+    },
+    "/api/v0/health": {
+      "get": {
+        "summary": "Liveness probe",
+        "description": "Dependency-free; returns 200 whenever the daemon is serving.",
+        "responses": {
+          "200": {
+            "description": "Serving",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Health" } } }
+          }
+        }
+      }
+    },
+    "/api/v0/capabilities": {
+      "get": {
+        "summary": "Adapter capabilities and versions",
+        "responses": {
+          "200": {
+            "description": "Capabilities",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Capabilities" } } }
+          }
+        }
+      }
+    },
+    "/api/v0/vault/summary": {
+      "get": {
+        "summary": "Vault summary (counts, recent, top routes/tags)",
+        "responses": {
+          "200": {
+            "description": "Summary",
+            "content": { "application/json": { "schema": { "type": "object", "required": ["summary"], "properties": { "summary": { "$ref": "#/components/schemas/VaultSummary" } } } } }
+          }
+        }
+      }
+    },
+    "/api/v0/entries": {
+      "get": {
+        "summary": "List entries (recent-first), optionally filtered",
+        "parameters": [
+          { "name": "type", "in": "query", "schema": { "$ref": "#/components/schemas/EntryType" }, "description": "Filter by entry type" },
+          { "name": "route", "in": "query", "schema": { "type": "string" }, "description": "Filter by route path (leading + is stripped)" },
+          { "name": "tag", "in": "query", "schema": { "type": "string" }, "description": "Filter by a single required tag" },
+          { "name": "since", "in": "query", "schema": { "type": "string", "format": "date-time" }, "description": "ISO 8601 lower bound on updatedAt" },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 200 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Entry summaries",
+            "content": { "application/json": { "schema": { "type": "object", "required": ["entries"], "properties": { "entries": { "type": "array", "items": { "$ref": "#/components/schemas/EntrySummary" } } } } } }
+          }
+        }
+      }
+    },
+    "/api/v0/entries/{id}": {
+      "get": {
+        "summary": "Read a single entry by id",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": {
+          "200": {
+            "description": "The entry, or null when the id is unknown (NOT a 404).",
+            "content": { "application/json": { "schema": { "type": "object", "required": ["entry"], "properties": { "entry": { "oneOf": [ { "$ref": "#/components/schemas/Entry" }, { "type": "null" } ] } } } } }
+          }
+        }
+      }
+    },
+    "/api/v0/search": {
+      "get": {
+        "summary": "Search entries",
+        "parameters": [
+          { "name": "q", "in": "query", "schema": { "type": "string" }, "description": "Query text" },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 50 } },
+          { "name": "semantic", "in": "query", "schema": { "type": "boolean" }, "description": "Request semantic search when the daemon supports it" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result summaries",
+            "content": { "application/json": { "schema": { "type": "object", "required": ["results"], "properties": { "results": { "type": "array", "items": { "$ref": "#/components/schemas/EntrySummary" } } } } } }
+          }
+        }
+      }
+    },
+    "/api/v0/concepts": {
+      "get": {
+        "summary": "List concept-page summaries",
+        "description": "Concept pages live under `<contentRoot>/_concepts/` canonically (same content-root resolution as the constitution: `<vault>/logmark` if that directory exists, else `<vault>` itself). `<vault>/concepts/` (no content-root indirection, no underscore) is a legacy read fallback for slugs not present canonically - canonical wins on a slug collision, no automatic migration.",
+        "responses": {
+          "200": {
+            "description": "Concept-page summaries",
+            "content": { "application/json": { "schema": { "type": "object", "required": ["pages"], "properties": { "pages": { "type": "array", "items": { "$ref": "#/components/schemas/ConceptPageSummary" } } } } } }
+          }
+        }
+      }
+    },
+    "/api/v0/concepts/{slug}": {
+      "get": {
+        "summary": "Read a concept page by slug",
+        "description": "Resolves canonical `<contentRoot>/_concepts/<slug>` first, then the legacy `<vault>/concepts/<slug>` fallback.",
+        "parameters": [ { "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": {
+          "200": {
+            "description": "The concept page, or null when the slug is unknown (NOT a 404).",
+            "content": { "application/json": { "schema": { "type": "object", "required": ["page"], "properties": { "page": { "oneOf": [ { "$ref": "#/components/schemas/ConceptPage" }, { "type": "null" } ] } } } } }
+          }
+        }
+      },
+      "put": {
+        "summary": "Write a concept page",
+        "description": "Writes always land canonical (`<contentRoot>/_concepts/<slug>`), creating the directory on first write.",
+        "parameters": [ { "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "required": ["page"], "properties": { "page": { "$ref": "#/components/schemas/ConceptPage" } } } } }
+        },
+        "responses": {
+          "200": { "description": "Written", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Ok" } } } },
+          "400": { "$ref": "#/components/responses/Problem" }
+        }
+      }
+    },
+    "/api/v0/constitution": {
+      "get": {
+        "summary": "Read the vault constitution",
+        "description": "Resolves against the vault's content root (`<vault>/logmark` if that directory exists, else `<vault>` itself): `vault.md` is canonical, with legacy `constitution.md` under the same content root as a fallback. Reads prefer `vault.md` when present.",
+        "responses": {
+          "200": {
+            "description": "Constitution body, or null when absent.",
+            "content": { "application/json": { "schema": { "type": "object", "required": ["body"], "properties": { "body": { "type": ["string", "null"] } } } } }
+          }
+        }
+      },
+      "put": {
+        "summary": "Write the vault constitution",
+        "description": "Writes go to the resolved constitution file: `vault.md` when it exists (or when neither file exists), else the legacy `constitution.md`. No auto-migration - a legacy-only vault keeps reading and writing `constitution.md`.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "required": ["body"], "properties": { "body": { "type": "string" } } } } }
+        },
+        "responses": {
+          "200": { "description": "Written", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Ok" } } } },
+          "400": { "$ref": "#/components/responses/Problem" }
+        }
+      }
+    },
+    "/api/v0/settings": {
+      "get": {
+        "summary": "Read cockpit settings",
+        "responses": {
+          "200": {
+            "description": "Settings",
+            "content": { "application/json": { "schema": { "type": "object", "required": ["settings"], "properties": { "settings": { "$ref": "#/components/schemas/KnowledgeSettings" } } } } }
+          }
+        }
+      },
+      "put": {
+        "summary": "Write cockpit settings",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "required": ["settings"], "properties": { "settings": { "$ref": "#/components/schemas/KnowledgeSettings" } } } } }
+        },
+        "responses": {
+          "200": { "description": "Written", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Ok" } } } },
+          "400": { "$ref": "#/components/responses/Problem" }
+        }
+      }
+    },
+    "/api/v0/events": {
+      "get": {
+        "summary": "Server-sent vault-change events",
+        "description": "`text/event-stream`. Each change emits an `event: vault-event` frame whose `data` is a JSON `{ kind, paths? }`. `kind` is one of `entries-changed`, `concepts-changed`, `constitution-changed`. A `: ping` comment heartbeat is sent at least every 30s. Clients reconnect with backoff on stream end.",
+        "responses": {
+          "200": {
+            "description": "SSE stream",
+            "content": { "text/event-stream": { "schema": { "type": "string" } } }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Problem": {
+        "description": "RFC 9457 problem detail",
+        "content": { "application/problem+json": { "schema": { "$ref": "#/components/schemas/Problem" } } }
+      }
+    },
+    "schemas": {
+      "Ok": {
+        "type": "object",
+        "required": ["ok"],
+        "properties": { "ok": { "const": true } }
+      },
+      "Problem": {
+        "type": "object",
+        "description": "RFC 9457 application/problem+json.",
+        "required": ["type", "title", "status", "detail", "code"],
+        "properties": {
+          "type": { "type": "string", "format": "uri", "description": "Dereferenceable URI, https://logmark.dev/errors/<code>" },
+          "title": { "type": "string" },
+          "status": { "type": "integer" },
+          "detail": { "type": "string", "description": "Human-readable message" },
+          "code": { "type": "string", "enum": ["invalid-request", "not-found", "internal"], "description": "Stable machine key clients branch on" }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "required": ["status", "vaultPath", "uptimeSeconds"],
+        "properties": {
+          "status": { "const": "ok" },
+          "vaultPath": { "type": "string" },
+          "uptimeSeconds": { "type": "integer" }
+        }
+      },
+      "Capabilities": {
+        "type": "object",
+        "required": ["adapter", "capabilities", "vaultPath", "versions"],
+        "properties": {
+          "adapter": { "const": "kernel-http" },
+          "vaultPath": { "type": "string" },
+          "capabilities": {
+            "type": "object",
+            "properties": {
+              "hasNotation": { "type": "boolean" },
+              "hasFolderSemantics": { "type": "boolean" },
+              "hasBehaviorCatalog": { "type": "boolean" },
+              "hasFeedSystem": { "type": "boolean" },
+              "hasSessions": { "type": "boolean" },
+              "hasConceptProducer": { "type": "boolean", "description": "The host writes concept pages (the desktop app). False on the open daemon; the cockpit hides concept surfaces when false. Absent on servers older than v0.1.0-rc8." }
+            }
+          },
+          "host": {
+            "type": "object",
+            "description": "The product serving this API. Absent on servers older than v0.1.0-rc6.",
+            "required": ["providerId", "product"],
+            "properties": {
+              "providerId": { "type": "string", "examples": ["oss-cli", "desktop"] },
+              "product": { "type": "string", "examples": ["LogMark Engine", "LogMark"] }
+            }
+          },
+          "versions": {
+            "type": "object",
+            "required": ["api", "server", "envelopeSpec"],
+            "properties": {
+              "api": { "const": "v0", "description": "Contract version (the /v0 path segment)" },
+              "server": { "type": "string", "description": "Daemon build version" },
+              "envelopeSpec": { "type": "integer", "description": "Mirrors VIEWBLOCK_SPEC_VERSION" }
+            }
+          }
+        }
+      },
+      "VaultTimestamp": {
+        "type": "string",
+        "description": "The vault's naive local wall-clock value (`yyyy-MM-ddTHH:mm:ss`, no trailing `Z`, no fractional seconds), NOT a UTC instant - the daemon's Iso() only appends `Z` for a genuinely DateTimeKind.Utc value. Clients must not assume every timestamp on the wire is UTC.",
+        "examples": ["2026-07-12T09:15:00"]
+      },
+      "EntryType": {
+        "type": "string",
+        "enum": ["task", "idea", "block", "decision", "log", "timetrack", "question", "gap", "analogy"]
+      },
+      "EntrySummary": {
+        "type": "object",
+        "required": ["id", "title", "tags", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "description": "ShortId (LogMark) or relative path (Vanilla)" },
+          "title": { "type": "string" },
+          "type": { "$ref": "#/components/schemas/EntryType" },
+          "route": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "createdAt": { "$ref": "#/components/schemas/VaultTimestamp" },
+          "updatedAt": { "$ref": "#/components/schemas/VaultTimestamp" }
+        }
+      },
+      "Entry": {
+        "allOf": [
+          { "$ref": "#/components/schemas/EntrySummary" },
+          {
+            "type": "object",
+            "required": ["body", "frontmatter"],
+            "properties": {
+              "body": { "type": "string" },
+              "frontmatter": { "type": "object", "additionalProperties": true },
+              "path": { "type": "string" },
+              "scope": { "type": "string" },
+              "source": { "type": "string" },
+              "session": { "type": "string" },
+              "backlinks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "title": { "type": "string" },
+                    "kind": { "type": "string" },
+                    "preview": { "type": "string" },
+                    "sourcePath": { "type": "string" }
+                  }
+                }
+              },
+              "links": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["label"],
+                  "properties": {
+                    "label": { "type": "string" },
+                    "linkType": { "type": "string" },
+                    "targetShortId": { "type": "string" },
+                    "targetPath": { "type": "string" },
+                    "isResolved": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "VaultSummary": {
+        "type": "object",
+        "required": ["total_entries", "by_type", "recent_entries", "top_routes", "top_tags", "total_concept_pages"],
+        "properties": {
+          "total_entries": { "type": "integer" },
+          "by_type": { "type": "object", "additionalProperties": { "type": "integer" } },
+          "recent_entries": {
+            "type": "array",
+            "description": "Top-10 by updatedAt, not a vault-wide total (see recent_activity_total).",
+            "items": {
+              "type": "object",
+              "required": ["id", "title", "updatedAt"],
+              "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string" },
+                "updatedAt": { "$ref": "#/components/schemas/VaultTimestamp" },
+                "route": { "type": "string" },
+                "type": { "type": "string" }
+              }
+            }
+          },
+          "all_routes": {
+            "type": "array",
+            "description": "The FULL route census, one entry per route with at least one entry. Ordered by count descending, then path ascending (ordinal) as a tie-break, so the order is fully deterministic.",
+            "items": {
+              "type": "object",
+              "required": ["path", "count", "name"],
+              "properties": {
+                "path": { "type": "string" },
+                "count": { "type": "integer" },
+                "name": { "type": "string", "description": "Always \"+\" + path" },
+                "description": { "type": "string", "description": "The route's description from routes.md; absent when it declares none." }
+              }
+            }
+          },
+          "top_routes": {
+            "type": "array",
+            "description": "LEGACY top-10-by-count compatibility view over the same data as all_routes, retained for older clients; new code should read all_routes.",
+            "items": { "type": "object", "required": ["path", "count"], "properties": { "path": { "type": "string" }, "count": { "type": "integer" }, "name": { "type": "string" }, "description": { "type": "string" } } }
+          },
+          "top_tags": {
+            "type": "array",
+            "items": { "type": "object", "required": ["tag", "count"], "properties": { "tag": { "type": "string" }, "count": { "type": "integer" } } }
+          },
+          "total_concept_pages": { "type": "integer" },
+          "route_count": { "type": "integer", "description": "all_routes.length - the total distinct-route count, NOT capped at 10." },
+          "recent_activity_total": { "type": "integer", "description": "Mirrors the size of recent_entries (top-10 by updatedAt), not a vault-wide total." }
+        }
+      },
+      "ConceptPageSource": {
+        "type": "object",
+        "required": ["id", "snapshot_hash", "distilled_at"],
+        "properties": {
+          "id": { "type": "string" },
+          "snapshot_hash": { "type": "string", "description": "sha256(entry.body) at distillation time" },
+          "distilled_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ConceptPage": {
+        "type": "object",
+        "required": ["slug", "title", "body", "status", "tags", "sources", "related_concepts", "created", "last_distilled", "distillation_version"],
+        "properties": {
+          "slug": { "type": "string" },
+          "title": { "type": "string" },
+          "body": { "type": "string" },
+          "status": { "type": "string", "enum": ["draft", "mature", "archived"] },
+          "draft": { "type": "boolean" },
+          "density": { "type": "number" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "sources": { "type": "array", "items": { "$ref": "#/components/schemas/ConceptPageSource" } },
+          "related_concepts": { "type": "array", "items": { "type": "string" } },
+          "created": { "type": "string", "format": "date-time" },
+          "last_distilled": { "type": "string", "format": "date-time" },
+          "distillation_version": { "type": "integer" }
+        }
+      },
+      "ConceptPageSummary": {
+        "type": "object",
+        "required": ["slug", "title", "status", "tags", "last_distilled", "source_count"],
+        "properties": {
+          "slug": { "type": "string" },
+          "title": { "type": "string" },
+          "status": { "type": "string", "enum": ["draft", "mature", "archived"] },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "last_distilled": { "type": "string", "format": "date-time" },
+          "source_count": { "type": "integer" },
+          "related_concepts": { "type": "array", "items": { "type": "string" } },
+          "distillation_version": { "type": "integer" },
+          "density": { "type": "number" },
+          "draft": { "type": "boolean" },
+          "stale_count": { "type": "integer" },
+          "related_count": { "type": "integer" },
+          "backlink_count": { "type": "integer" }
+        }
+      },
+      "KnowledgeSettings": {
+        "type": "object",
+        "required": ["providerOrder", "routing"],
+        "properties": {
+          "providerOrder": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["claude-cli", "ollama", "lm-studio"] }
+          },
+          "routing": {
+            "type": "object",
+            "required": ["summarization", "distillation", "searchEnrichment"],
+            "properties": {
+              "summarization": { "type": "string", "enum": ["default", "disabled"] },
+              "distillation": { "type": "string", "enum": ["default", "disabled"] },
+              "searchEnrichment": { "type": "string", "enum": ["default", "disabled"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

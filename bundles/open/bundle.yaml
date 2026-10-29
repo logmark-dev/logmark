@@ -1,0 +1,6 @@
+id: open
+name: Open vault
+description: An empty, agent-ready vault. No demo routes, no example entries.
+posture: building
+subject-required: false
+seed-content-default: false

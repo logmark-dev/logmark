@@ -1,0 +1,23 @@
+{
+  "name": "@logmark/lblocks",
+  "version": "0.5.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:visual": "playwright test",
+    "test:all": "vitest run && playwright test",
+    "dev": "node --import tsx dev/server.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^3.1.0",
+    "jsdom": "^26.1.0",
+    "@playwright/test": "^1.52.0",
+    "tsx": "^4.21.0"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "blocks": [
+    { "kind": "paragraph", "children": [{ "kind": "text", "text": "Image below." }] },
+    { "kind": "image", "src": "https://placehold.co/400x200", "alt": "placeholder" },
+    { "kind": "paragraph", "children": [{ "kind": "text", "text": "Image with title." }] },
+    { "kind": "image", "src": "https://placehold.co/200x200", "alt": "tiny", "title": "Tooltip" }
+  ]
+}

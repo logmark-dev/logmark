@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "blocks": [
+    { "kind": "heading", "level": 1, "children": [{ "kind": "text", "text": "Track A features" }] },
+    { "kind": "paragraph", "children": [
+      { "kind": "emphasis", "style": "strikethrough", "children": [{ "kind": "text", "text": "struck out" }] },
+      { "kind": "text", "text": " and " },
+      { "kind": "emphasis", "style": "bold", "children": [{ "kind": "text", "text": "bold" }] },
+      { "kind": "text", "text": " and " },
+      { "kind": "emphasis", "style": "italic", "children": [{ "kind": "text", "text": "italic" }] },
+      { "kind": "text", "text": "." }
+    ]},
+    { "kind": "paragraph", "children": [
+      { "kind": "text", "text": "Hard break here:" },
+      { "kind": "line-break" },
+      { "kind": "text", "text": "line one" },
+      { "kind": "line-break" },
+      { "kind": "text", "text": "line two" },
+      { "kind": "line-break" },
+      { "kind": "text", "text": "line three after br." }
+    ]},
+    { "kind": "paragraph", "children": [
+      { "kind": "text", "text": "Inline image: see " },
+      { "kind": "inline-image", "src": "/fixtures/cat.png", "alt": "cat" },
+      { "kind": "text", "text": " inside text." }
+    ]},
+    { "kind": "paragraph", "children": [
+      { "kind": "text", "text": "Link with image: " },
+      { "kind": "link", "href": "https://example.com", "children": [
+        { "kind": "inline-image", "src": "/fixtures/logo.png", "alt": "logo" }
+      ]}
+    ]},
+    { "kind": "list", "ordered": false, "items": [
+      { "checked": false, "children": [{ "kind": "paragraph", "children": [{ "kind": "text", "text": "todo item" }] }] },
+      { "checked": true,  "children": [{ "kind": "paragraph", "children": [{ "kind": "text", "text": "done item" }] }] },
+      {                   "children": [{ "kind": "paragraph", "children": [{ "kind": "text", "text": "regular item" }] }] }
+    ]}
+  ]
+}

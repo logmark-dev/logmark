@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LogMark.Daemon\LogMark.Daemon.csproj" />
+  </ItemGroup>
+
+  <!-- Synthetic cockpit fixtures for CockpitStaticServerMergeTests: three tiny
+       in-memory "cockpit builds" (A, B, C) embedded into THIS assembly, used
+       to construct CockpitStaticServer.Source instances directly (internal
+       ctor) without depending on two real LogMark.Knowledge builds existing
+       side by side. Folder names carry no hyphens so the Link-derived
+       resource naming needs no extra sanitization (see CockpitStaticServer's
+       class doc). -->
+  <ItemGroup>
+    <EmbeddedResource Include="TestFixtures\CockpitMerge\A\**\*" Exclude="**\bin\**;**\obj\**">
+      <Link>cockpitA\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestFixtures\CockpitMerge\B\**\*" Exclude="**\bin\**;**\obj\**">
+      <Link>cockpitB\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestFixtures\CockpitMerge\C\**\*" Exclude="**\bin\**;**\obj\**">
+      <Link>cockpitC\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

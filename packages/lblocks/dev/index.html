@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lblocks dev gallery</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, system-ui, sans-serif;
+      background: #1E1E1E;
+      color: #E0E0E0;
+      min-height: 100vh;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    body.theme-light {
+      background: #F5F5F5;
+      color: #1E1E1E;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      border-bottom: 1px solid #3E3E3E;
+      background: #2A2A2A;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    body.theme-light .toolbar {
+      border-bottom-color: #C0C0C0;
+      background: #E8E8E8;
+    }
+
+    .toolbar-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #4A90B8;
+      flex: 1;
+    }
+
+    body.theme-light .toolbar-title {
+      color: #40708A;
+    }
+
+    .theme-btn {
+      padding: 4px 12px;
+      border-radius: 4px;
+      border: 1px solid #3E3E3E;
+      background: transparent;
+      color: #A0A0A0;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .theme-btn:hover {
+      background: #3A3A3A;
+      color: #E0E0E0;
+    }
+
+    .theme-btn.active {
+      background: #4A90B8;
+      color: #fff;
+      border-color: #4A90B8;
+    }
+
+    body.theme-light .theme-btn {
+      border-color: #C0C0C0;
+      color: #505050;
+    }
+
+    body.theme-light .theme-btn:hover {
+      background: #D0D0D0;
+      color: #1E1E1E;
+    }
+
+    body.theme-light .theme-btn.active {
+      background: #40708A;
+      color: #fff;
+      border-color: #40708A;
+    }
+
+    .page {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #888888;
+      margin-bottom: 16px;
+    }
+
+    body.theme-light .section-title {
+      color: #707070;
+    }
+
+    .digest-container {
+      width: 100%;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .gallery-slot {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .primitive-label {
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #888888;
+    }
+
+    body.theme-light .primitive-label {
+      color: #707070;
+    }
+
+    .primitive-frame {
+      padding: 12px;
+      background: #2A2A2A;
+      border-radius: 6px;
+      border: 1px solid #3E3E3E;
+    }
+
+    body.theme-light .primitive-frame {
+      background: #E8E8E8;
+      border-color: #C0C0C0;
+    }
+
+    #digest-root {
+      width: 100%;
+    }
+
+    #digest-root .lb-root {
+      max-width: 100%;
+    }
+
+    .error-msg {
+      color: #C45C5C;
+      font-size: 13px;
+      padding: 12px;
+    }
+  </style>
+</head>
+<body class="theme-dark">
+
+  <div class="toolbar">
+    <span class="toolbar-title">lblocks</span>
+    <button class="theme-btn active" id="btn-dark">Dark</button>
+    <button class="theme-btn" id="btn-light">Light</button>
+  </div>
+
+  <div class="page">
+
+    <div class="digest-section">
+      <div class="section-title">Digest Composition</div>
+      <div class="digest-container">
+        <div id="digest-root"></div>
+      </div>
+    </div>
+
+    <div class="gallery-section">
+      <div class="section-title">Primitive Gallery</div>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import {
+      render,
+      applyTheme,
+      DARK_TOKENS,
+      LIGHT_TOKENS,
+      renderBarChart,
+      renderLabelValueList,
+      renderNarrative,
+      renderComparison,
+      renderSectionHeader,
+    } from '/index.js'
+
+    let currentTheme = 'dark'
+
+    function onAction(action) {
+      console.log('[lblocks action]', action)
+    }
+
+    function applyBodyTheme(theme) {
+      document.body.className = theme === 'dark' ? 'theme-dark' : 'theme-light'
+    }
+
+    function applyFrameTheme(el, theme) {
+      applyTheme(el, theme)
+    }
+
+    // Theme toggle
+    const btnDark = document.getElementById('btn-dark')
+    const btnLight = document.getElementById('btn-light')
+
+    function switchTheme(theme) {
+      currentTheme = theme
+      applyBodyTheme(theme)
+      btnDark.classList.toggle('active', theme === 'dark')
+      btnLight.classList.toggle('active', theme === 'light')
+      renderAll()
+    }
+
+    btnDark.addEventListener('click', () => switchTheme('dark'))
+    btnLight.addEventListener('click', () => switchTheme('light'))
+
+    // Fetch fixtures and render
+    let fixtures = null
+
+    async function loadFixtures() {
+      try {
+        const res = await fetch('/fixtures')
+        fixtures = await res.json()
+        renderAll()
+      } catch (err) {
+        document.getElementById('digest-root').innerHTML =
+          '<div class="error-msg">Failed to load fixtures: ' + err.message + '</div>'
+      }
+    }
+
+    function getFirstValid(fixture) {
+      return fixture?.valid?.[0]?.envelope ?? null
+    }
+
+    function renderAll() {
+      if (!fixtures) return
+      renderDigest()
+      renderGallery()
+    }
+
+    function renderDigest() {
+      const digestRoot = document.getElementById('digest-root')
+      digestRoot.innerHTML = ''
+
+      const narrativeBlock = getFirstValid(fixtures['narrative-summary'])
+      const activityBlock = getFirstValid(fixtures['activity-chart'])
+      const typeBlock = getFirstValid(fixtures['type-breakdown'])
+      const routeBlock = getFirstValid(fixtures['route-distribution'])
+
+      const blocks = [narrativeBlock, activityBlock, typeBlock, routeBlock].filter(Boolean)
+
+      if (blocks.length === 0) {
+        digestRoot.innerHTML = '<div class="error-msg">No fixture data available</div>'
+        return
+      }
+
+      render(blocks, digestRoot, { theme: currentTheme, onAction })
+    }
+
+    function makeFrame(theme) {
+      const frame = document.createElement('div')
+      frame.className = 'primitive-frame'
+      applyTheme(frame, theme)
+      return frame
+    }
+
+    function makeSlot(label) {
+      const slot = document.createElement('div')
+      slot.className = 'gallery-slot'
+      const lbl = document.createElement('div')
+      lbl.className = 'primitive-label'
+      lbl.textContent = label
+      slot.appendChild(lbl)
+      return slot
+    }
+
+    function renderGallery() {
+      const grid = document.getElementById('gallery-grid')
+      grid.innerHTML = ''
+
+      const opts = { density: 'standard', onAction }
+
+      // 1. bar-chart: activity data
+      {
+        const slot = makeSlot('bar-chart -- activity')
+        const frame = makeFrame(currentTheme)
+        const activityBlock = getFirstValid(fixtures['activity-chart'])
+        if (activityBlock) {
+          const bars = activityBlock.data.days.map(d => ({ label: d.label, value: d.count }))
+          const max = Math.max(...bars.map(b => b.value))
+          const barsWithMax = bars.map(b => ({ ...b, maxValue: max }))
+          frame.appendChild(renderBarChart({ bars: barsWithMax }, opts))
+        }
+        slot.appendChild(frame)
+        grid.appendChild(slot)
+      }
+
+      // 2. bar-chart: route data
+      {
+        const slot = makeSlot('bar-chart -- routes')
+        const frame = makeFrame(currentTheme)
+        const routeBlock = getFirstValid(fixtures['route-distribution'])
+        if (routeBlock) {
+          const bars = routeBlock.data.routes.map(r => ({
+            label: '+' + r.name,
+            value: r.count,
+            suffix: '(' + r.pct + '%)',
+            maxValue: routeBlock.data.total,
+          }))
+          frame.appendChild(renderBarChart({ bars }, opts))
+        }
+        slot.appendChild(frame)
+        grid.appendChild(slot)
+      }
+
+      // 3. label-value-list
+      {
+        const slot = makeSlot('label-value-list')
+        const frame = makeFrame(currentTheme)
+        const typeBlock = getFirstValid(fixtures['type-breakdown'])
+        if (typeBlock) {
+          const items = typeBlock.data.types.map(t => ({ label: t.type, value: t.count }))
+          frame.appendChild(renderLabelValueList({ items }, opts))
+        }
+        slot.appendChild(frame)
+        grid.appendChild(slot)
+      }
+
+      // 4. narrative
+      {
+        const slot = makeSlot('narrative')
+        const frame = makeFrame(currentTheme)
+        const narrativeBlock = getFirstValid(fixtures['narrative-summary'])
+        if (narrativeBlock) {
+          frame.appendChild(renderNarrative({
+            text: narrativeBlock.data.text,
+            badge: narrativeBlock.data.inference ?? null,
+          }, opts))
+        }
+        slot.appendChild(frame)
+        grid.appendChild(slot)
+      }
+
+      // 5. comparison (hardcoded)
+      {
+        const slot = makeSlot('comparison')
+        const frame = makeFrame(currentTheme)
+        frame.appendChild(renderComparison({
+          text: '48 entries this week vs 35 last week',
+          delta: 37,
+          direction: 'up',
+        }, opts))
+        slot.appendChild(frame)
+        grid.appendChild(slot)
+      }
+
+      // 6. section-header
+      {
+        const slot = makeSlot('section-header')
+        const frame = makeFrame(currentTheme)
+        frame.appendChild(renderSectionHeader({ label: 'Weekly Digest' }))
+        slot.appendChild(frame)
+        grid.appendChild(slot)
+      }
+    }
+
+    loadFixtures()
+  </script>
+</body>
+</html>

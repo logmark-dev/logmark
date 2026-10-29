@@ -1,0 +1,7 @@
+id: tracker
+name: Track a topic
+description: Follow something over time - a market, an AI capability, a health signal.
+posture: tracking
+subject-required: true
+subject-prompt: What are you tracking?
+seed-content-default: true

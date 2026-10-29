@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logmark.dev/schemas/viewblocks/vault-summary.json",
+  "title": "Vault Summary Block Data",
+  "description": "Scope line + total for a vault slice (C# payload record: SliceSummaryData)",
+  "type": "object",
+  "required": ["scopeText", "totalMatched"],
+  "additionalProperties": false,
+  "properties": {
+    "scopeText": {
+      "type": "string",
+      "description": "Human-readable scope, e.g. 'question, last 90 days'"
+    },
+    "totalMatched": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of entries in the slice"
+    }
+  }
+}

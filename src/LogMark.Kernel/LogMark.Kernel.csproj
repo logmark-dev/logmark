@@ -1,0 +1,89 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>LogMark</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="LogMark.Core" />
+    <InternalsVisibleTo Include="LogMark.Core.Tests" />
+    <InternalsVisibleTo Include="LogMark.Daemon.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.37.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Recognizers.Text.DateTime" Version="1.8.9" />
+    <PackageReference Include="YamlDotNet" Version="16.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\bundles\**\*" Condition="Exists('..\..\..\bundles')">
+      <Link>bundles\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\..\..\bundles\**\*" Condition="Exists('..\..\..\..\..\bundles')">
+      <Link>bundles\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+    <!-- OSS mirror layout (Task 11 dry-run fix): the public tree roots at
+         out/oss/logmark, so the root repo's bundles/ (mirrored verbatim by
+         manifest.logmark.json) lands two levels up from this csproj, not
+         three or five like the private umbrella layouts above. Guarded
+         against BOTH other paths, not just the three-up one: out/oss/logmark
+         happens to sit exactly five directory levels below the private
+         umbrella root, so a local build run from inside the assembled tree
+         (rather than a real standalone checkout) can satisfy the five-up
+         guard too by coincidence of nesting depth - confirmed by CS1508
+         duplicate-resource-identifier errors before this guard was added.
+         Never a duplicate Link in any checkout where more than one path
+         would otherwise resolve. -->
+    <EmbeddedResource Include="..\..\bundles\**\*" Condition="Exists('..\..\bundles') AND !Exists('..\..\..\bundles') AND !Exists('..\..\..\..\..\bundles')">
+      <Link>bundles\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Behaviors\persona-contexts.json" />
+    <EmbeddedResource Include="..\..\..\schemas\openapi\daemon-v0.json" Condition="Exists('..\..\..\schemas\openapi\daemon-v0.json')">
+      <Link>Resources\openapi\daemon-v0.json</Link>
+      <LogicalName>LogMark.Resources.openapi.daemon-v0.json</LogicalName>
+    </EmbeddedResource>
+    <!-- OSS mirror layout: the public tree roots at out/oss/logmark, so the
+         root repo's schemas/ lands INSIDE the tree (two-up from this csproj),
+         not one level above it like the private umbrella layout (three-up
+         above). The two-up guard also requires the three-up path to be
+         absent, so the two conditions are mutually exclusive even in a
+         checkout where both paths happen to exist - never a duplicate
+         LogicalName. -->
+    <EmbeddedResource Include="..\..\schemas\openapi\daemon-v0.json" Condition="Exists('..\..\schemas\openapi\daemon-v0.json') AND !Exists('..\..\..\schemas\openapi\daemon-v0.json')">
+      <Link>Resources\openapi\daemon-v0.json</Link>
+      <LogicalName>LogMark.Resources.openapi.daemon-v0.json</LogicalName>
+    </EmbeddedResource>
+    <!-- Cockpit SPA build (embedded-hosting design, lmk-nhjr Task 3): baked
+         in at compile time from a pre-built LogMark.Knowledge/dist/ui, the
+         Vite client bundle directory (NOT the sibling dist/ (server) or
+         dist/index.js - see LogMark.Knowledge/vite.config.ts's root/outDir).
+         Absent when Kernel is built standalone without ever running
+         `npm run build` in LogMark.Knowledge/ (Exists guard), in which case
+         CockpitStaticServer degrades to an API-only notice page. Follows the
+         bundles glob above: Link + %(RecursiveDir) only, no LogicalName -
+         explicit LogicalName does not auto-namespace or dot-normalize the
+         RecursiveDir separator the way the default Link-derived name does
+         (verified empirically; see CockpitStaticServer's class doc). -->
+    <EmbeddedResource Include="..\..\..\LogMark.Knowledge\dist\ui\**\*" Condition="Exists('..\..\..\LogMark.Knowledge\dist\ui')">
+      <Link>cockpit\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- Skill packs shipped for `logmark connect` (the skills capability).
+       Homed here (not LogMark.Core) so a Kernel-only binary (LogMark.Daemon)
+       still has packs to install. Core, CLI, and App consumers get them
+       transitively via CopyToOutputDirectory content propagation across
+       ProjectReference chains (Core references Kernel; CLI and App
+       reference Core). -->
+  <ItemGroup>
+    <Content Include="Resources\SkillPacks\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

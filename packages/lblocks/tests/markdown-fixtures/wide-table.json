@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "blocks": [
+    { "kind": "heading", "level": 2, "children": [{ "kind": "text", "text": "Trading Order Log" }] },
+    {
+      "kind": "table",
+      "alignments": ["left", "left", "left", "left", "right", "right", "right", "right", "right", "right", "left", "left", "left", "left"],
+      "header": { "cells": [
+        { "children": [{ "kind": "text", "text": "Order Time" }] },
+        { "children": [{ "kind": "text", "text": "Pair" }] },
+        { "children": [{ "kind": "text", "text": "Type" }] },
+        { "children": [{ "kind": "text", "text": "Side" }] },
+        { "children": [{ "kind": "text", "text": "Average" }] },
+        { "children": [{ "kind": "text", "text": "Price" }] },
+        { "children": [{ "kind": "text", "text": "Executed" }] },
+        { "children": [{ "kind": "text", "text": "Amount" }] },
+        { "children": [{ "kind": "text", "text": "Per Iceberg" }] },
+        { "children": [{ "kind": "text", "text": "Total" }] },
+        { "children": [{ "kind": "text", "text": "Trigger" }] },
+        { "children": [{ "kind": "text", "text": "MKT Ref" }] },
+        { "children": [{ "kind": "text", "text": "Status" }] },
+        { "children": [{ "kind": "text", "text": "Notes" }] }
+      ]},
+      "rows": [
+        { "cells": [
+          { "children": [{ "kind": "text", "text": "2026-04-20 17:30" }] },
+          { "children": [{ "kind": "text", "text": "ETH/USDC" }] },
+          { "children": [{ "kind": "text", "text": "Limit" }] },
+          { "children": [{ "kind": "text", "text": "Buy" }] },
+          { "children": [{ "kind": "text", "text": "1605.40" }] },
+          { "children": [{ "kind": "text", "text": "1605.40" }] },
+          { "children": [{ "kind": "text", "text": "0.0312" }] },
+          { "children": [{ "kind": "text", "text": "0.0312" }] },
+          { "children": [{ "kind": "text", "text": "0.0312" }] },
+          { "children": [{ "kind": "text", "text": "50.09" }] },
+          { "children": [{ "kind": "text", "text": "-" }] },
+          { "children": [{ "kind": "text", "text": "-" }] },
+          { "children": [{ "kind": "text", "text": "Filled" }] },
+          { "children": [{ "kind": "text", "text": "" }] }
+        ]},
+        { "cells": [
+          { "children": [{ "kind": "text", "text": "2026-04-20 17:27" }] },
+          { "children": [{ "kind": "text", "text": "ETH/USDT" }] },
+          { "children": [{ "kind": "text", "text": "Limit" }] },
+          { "children": [{ "kind": "text", "text": "Buy" }] },
+          { "children": [{ "kind": "text", "text": "1601.88" }] },
+          { "children": [{ "kind": "text", "text": "1601.88" }] },
+          { "children": [{ "kind": "text", "text": "0.0312" }] },
+          { "children": [{ "kind": "text", "text": "0.0312" }] },
+          { "children": [{ "kind": "text", "text": "0.0312" }] },
+          { "children": [{ "kind": "text", "text": "50.00" }] },
+          { "children": [{ "kind": "text", "text": "-" }] },
+          { "children": [{ "kind": "text", "text": "-" }] },
+          { "children": [{ "kind": "text", "text": "Filled" }] },
+          { "children": [{ "kind": "text", "text": "" }] }
+        ]},
+        { "cells": [
+          { "children": [{ "kind": "text", "text": "2026-04-20 12:17" }] },
+          { "children": [{ "kind": "text", "text": "TRX/USDT" }] },
+          { "children": [{ "kind": "text", "text": "Limit" }] },
+          { "children": [{ "kind": "text", "text": "Buy" }] },
+          { "children": [{ "kind": "text", "text": "0.2471" }] },
+          { "children": [{ "kind": "text", "text": "0.2471" }] },
+          { "children": [{ "kind": "text", "text": "202.50" }] },
+          { "children": [{ "kind": "text", "text": "202.50" }] },
+          { "children": [{ "kind": "text", "text": "202.50" }] },
+          { "children": [{ "kind": "text", "text": "50.04" }] },
+          { "children": [{ "kind": "text", "text": "-" }] },
+          { "children": [{ "kind": "text", "text": "-" }] },
+          { "children": [{ "kind": "text", "text": "Filled" }] },
+          { "children": [{ "kind": "text", "text": "" }] }
+        ]},
+        { "cells": [
+          { "children": [{ "kind": "text", "text": "2026-04-19 09:45" }] },
+          { "children": [{ "kind": "text", "text": "BTC/USDT" }] },
+          { "children": [{ "kind": "text", "text": "Market" }] },
+          { "children": [{ "kind": "text", "text": "Sell" }] },
+          { "children": [{ "kind": "text", "text": "84200.00" }] },
+          { "children": [{ "kind": "text", "text": "84200.00" }] },
+          { "children": [{ "kind": "text", "text": "0.0006" }] },
+          { "children": [{ "kind": "text", "text": "0.0006" }] },
+          { "children": [{ "kind": "text", "text": "0.0006" }] },
+          { "children": [{ "kind": "text", "text": "50.52" }] },
+          { "children": [{ "kind": "text", "text": "-" }] },
+          { "children": [{ "kind": "text", "text": "-" }] },
+          { "children": [{ "kind": "text", "text": "Filled" }] },
+          { "children": [{ "kind": "text", "text": "" }] }
+        ]}
+      ]
+    }
+  ]
+}

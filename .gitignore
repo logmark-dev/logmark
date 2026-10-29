@@ -1,0 +1,21 @@
+# Build output
+bin/
+obj/
+out/
+
+# .NET
+*.user
+*.suo
+.vs/
+
+# Node
+node_modules/
+dist/
+
+# Root lockfile is deliberately not shipped (a Windows-authored lock breaks the
+# linux/macos rollup optional-dependency install in CI). Anchored: packages/lblocks
+# ships its own committed lockfile, which npm ci needs.
+/package-lock.json
+
+# Cockpit bundle is a build output, embedded into the daemon at publish time
+/src/LogMark.Daemon/cockpit-dist/

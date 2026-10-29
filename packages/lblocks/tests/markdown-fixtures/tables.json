@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "blocks": [
+    { "kind": "heading", "level": 2, "children": [{ "kind": "text", "text": "Tables" }] },
+    {
+      "kind": "table",
+      "alignments": ["left", "center", "right"],
+      "header": { "cells": [
+        { "children": [{ "kind": "text", "text": "Col A" }] },
+        { "children": [{ "kind": "text", "text": "Col B" }] },
+        { "children": [{ "kind": "text", "text": "Col C" }] }
+      ]},
+      "rows": [
+        { "cells": [
+          { "children": [{ "kind": "text", "text": "left" }] },
+          { "children": [{ "kind": "text", "text": "center" }] },
+          { "children": [{ "kind": "text", "text": "right" }] }
+        ]},
+        { "cells": [
+          { "children": [{ "kind": "code-span", "text": "code in cell" }] },
+          { "children": [{ "kind": "emphasis", "style": "bold", "children": [{ "kind": "text", "text": "bold" }] }] },
+          { "children": [{ "kind": "text", "text": "1234.56" }] }
+        ]}
+      ]
+    }
+  ]
+}

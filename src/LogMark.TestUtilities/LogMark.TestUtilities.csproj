@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>LogMark.TestUtilities</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Open substrate only: LogMark.CLI references Kernel alone (Task 4 OSS
+         split). The closed test doubles that need LogMark.Core (license,
+         usage-store) live in LogMark.TestUtilities.Producers instead. -->
+    <ProjectReference Include="..\LogMark.CLI\LogMark.CLI.csproj" />
+  </ItemGroup>
+</Project>

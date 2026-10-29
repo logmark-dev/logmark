@@ -1,0 +1,8 @@
+<Project>
+  <!-- Public (OSS) build marker + the single OSS version source. -->
+  <PropertyGroup>
+    <OssBuild>true</OssBuild>
+    <OssVersionFile>$(MSBuildThisFileDirectory)VERSION</OssVersionFile>
+    <Version Condition="'$(Version)' == '' and Exists('$(OssVersionFile)')">$([System.IO.File]::ReadAllText('$(OssVersionFile)').Trim())</Version>
+  </PropertyGroup>
+</Project>

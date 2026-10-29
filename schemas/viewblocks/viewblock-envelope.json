@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logmark.dev/schemas/viewblocks/viewblock-envelope.json",
+  "title": "LogMark ViewBlock Envelope",
+  "description": "Typed data envelope for cross-platform block rendering in LogMark",
+  "type": "object",
+  "required": [
+    "type",
+    "version",
+    "data"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "activity-chart",
+        "type-breakdown",
+        "route-distribution",
+        "narrative-summary",
+        "tag-cloud",
+        "theme-clusters",
+        "delta-table",
+        "comparison-text",
+        "entry-list",
+        "workflow-report",
+        "vault-summary",
+        "rendered-content",
+        "feed-item",
+        "observatory-card",
+        "action-bar",
+        "viewer-entry-card",
+        "viewer-entry-list",
+        "type-strip",
+        "backlink-list",
+        "search-result-list",
+        "viewer-entry-row",
+        "reader-sidebar-tree",
+        "route-card-grid",
+        "reader-view-header",
+        "summary-strip",
+        "type-distribution-bar",
+        "empty-state",
+        "viewer-section-title",
+        "highlight-row",
+        "wiki-link-pills",
+        "hero-number",
+        "topic-rail",
+        "attribution-chip",
+        "tag-page-meta-sidebar",
+        "topic-shelf",
+        "entry-neighbors-band",
+        "dl-glyph",
+        "lens-tabs",
+        "chip-strip",
+        "concept-page",
+        "grouped-list",
+        "section-header",
+        "board"
+      ],
+      "description": "Block type identifier"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Block schema version"
+    },
+    "specVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Envelope spec version (distinct from per-block version). Optional; absent means 1."
+    },
+    "data": {
+      "type": "object",
+      "description": "Typed payload specific to the block type"
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "Generator that produced this block (e.g. digest, observatory)"
+        },
+        "period": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "start": {
+              "type": "string",
+              "format": "date",
+              "description": "Start of the time range (inclusive)"
+            },
+            "end": {
+              "type": "string",
+              "format": "date",
+              "description": "End of the time range (inclusive)"
+            }
+          }
+        },
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this block was generated"
+        },
+        "inference": {
+          "enum": [
+            "L0",
+            "L1",
+            "L2",
+            "L3",
+            null
+          ],
+          "description": "Inference tier used to generate this block, or null if none"
+        },
+        "renderHints": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "weight": {
+              "type": "string",
+              "enum": [
+                "half",
+                "full"
+              ],
+              "description": "Layout weight: half for column-friendly, full for full-width"
+            },
+            "density": {
+              "type": "string",
+              "enum": [
+                "compact",
+                "standard"
+              ],
+              "description": "Visual density"
+            }
+          }
+        }
+      }
+    }
+  }
+}

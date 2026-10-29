@@ -1,0 +1,7 @@
+id: operator
+name: Run a thing
+description: A business or project you operate - clients, decisions, deliverables.
+posture: building
+subject-required: true
+subject-prompt: What are you running?
+seed-content-default: true

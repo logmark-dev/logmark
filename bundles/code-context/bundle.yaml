@@ -1,0 +1,6 @@
+id: code-context
+name: Code context for AI
+description: Persistent context for coding agents across sessions - conventions, decisions, things to remember.
+posture: reference
+subject-required: false
+seed-content-default: true

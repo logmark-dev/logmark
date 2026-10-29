@@ -1,0 +1,6 @@
+id: source
+name: Source vault
+description: Drop links, PDFs, screenshots - an agent organizes them into concepts and connections.
+posture: reference
+subject-required: false
+seed-content-default: true

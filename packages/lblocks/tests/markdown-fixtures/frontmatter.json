@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "blocks": [
+    { "kind": "frontmatter", "entries": [
+      { "key": "title", "value": "Hello" },
+      { "key": "date", "value": "2026-04-28" },
+      { "key": "tags", "value": "alpha, beta, gamma" },
+      { "key": "status", "value": "draft" }
+    ]},
+    { "kind": "paragraph", "children": [{ "kind": "text", "text": "Body follows." }] }
+  ]
+}

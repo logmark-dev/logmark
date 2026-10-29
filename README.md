@@ -49,10 +49,10 @@ logmark serve --vault ./my-vault
 Connect an agent over MCP with the built-in wiring command - it writes the client config for you, pointing at the right binary:
 
 ```
-logmark connect claude-code --mcp --vault ./my-vault
+logmark connect claude-code --all --vault ./my-vault
 ```
 
-(Frameworks: `claude-code`, `codex`, `gemini-cli`, `cursor`, `copilot-cli`.) Add `--skills --hooks` (or `--all`) to install the nine agent skills and the session hook too. The skills teach the agent the loop: orient at the start of a session, capture as it works, checkpoint at the end.
+(Frameworks: `claude-code`, `codex`, `gemini-cli`, `cursor`, `copilot-cli`.) `--all` installs the MCP wiring, the nine agent skills and the session hook; use `--mcp` alone to wire only the server. The skills teach the agent the loop: orient at the start of a session, capture as it works, checkpoint at the end.
 
 Or wire a client by hand. Claude Code and Codex take a one-liner:
 
@@ -94,7 +94,7 @@ Write etiquette: one claim per entry. Type it (`t:` task, `i:` idea, `b:` block,
 
 ## Other ways to install
 
-**npm** - The npm package ships with v0.1.0; during the release-candidate window use the archives above. From v0.1.0, install once to get the plain `logmark` command:
+**npm** - The release candidate is on npm under the `rc` tag: `npm i -g @logmark/cli@rc`. From v0.1.0, `npm i -g @logmark/cli` installs the stable release and gives you the plain `logmark` command:
 
 ```
 npm i -g @logmark/cli
